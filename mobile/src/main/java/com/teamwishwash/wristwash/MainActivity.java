@@ -25,9 +25,11 @@ public class MainActivity extends AppCompatActivity {
 
         // data for list of hand washing techniques
         String[] handWashingTechniques = {"Rubbing Palms", "Rubbing Back of Hands", "Rubbing Between Fingers", "Rubbing Under Nails"};
-        // HandWashingListAdapter detailScoresAdapter = new HandWashingListAdapter(this, R.layout.hand_wash_techniques_list, handWashingTechniques);
         ListAdapter detailListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, handWashingTechniques);
         detailList.setAdapter(detailListAdapter);
+
+        // will be used later if we want to add scores on the side of each hand washing technique
+        // HandWashingListAdapter detailScoresAdapter = new HandWashingListAdapter(this, R.layout.hand_wash_techniques_list, handWashingTechniques);
 
         // goes to more hand washing details on click
         detailList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows the details of a specific hand washing technique.
+     * Goes to the DetailedScores screen. The specific hand
+     * washing technique that user clicks on for more details
+     * is in the list of the main screen.
+     *
+     * @param handWash name of the hand washing technique that user pressed on
+     */
     public void showDetails(String handWash) {
         Intent intent = new Intent(this, DetailedScores.class);
         intent.putExtra(HAND_WASHING_TECHNIQUE, handWash);
