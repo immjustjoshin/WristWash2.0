@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.teamwishwash.wristwash.DetailedScores">
+
+    <TextView
+        android:id="@+id/handWashTechniqueTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/hand_washing_technique"
+        android:textColor="#000000"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/detailTotalScoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/handWashTechniqueTextView"
+        android:layout_marginTop="15dp"
+        android:text="@string/total_score"
+        android:textColor="#000000"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/detailScoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/detailTotalScoreTextView"
+        android:layout_marginTop="10dp"
+        android:text="2.36"
+        android:textSize="40sp"/>
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/detailScoreTextView"
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:textSize="15sp"
+        android:text="Random ass description that talks about how ass your score and technique was and tells you how you can improve to be the master of hand washing! >:D" />
+</RelativeLayout>

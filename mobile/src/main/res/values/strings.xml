@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WristWash</string>
+    <string name="total_score">Total Score</string>
+    <string name="hand_washing_technique">Hand Washing Technique</string>
+</resources>
