@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/detailTotalScoreTextView"
         android:layout_marginTop="10dp"
-        android:text="2.36"
+        android:text="@string/score"
         android:textSize="40sp"/>
 
     <TextView

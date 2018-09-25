@@ -20,10 +20,14 @@ public class DetailedScores extends AppCompatActivity {
         // gets name of hand washing technique that was clicked on
         Intent intent = getIntent();
         String techniqueTitle = intent.getStringExtra(MainActivity.HAND_WASHING_TECHNIQUE);
+        double scoreValue = intent.getDoubleExtra(MainActivity.HAND_WASH_SCORE, 0.0);
 
         // displays hand washing technique name
         TextView handWashingTechnique = (TextView) findViewById(R.id.handWashTechniqueTextView);
+        TextView handWashScore = (TextView) findViewById(R.id.detailScoreTextView);
+
         handWashingTechnique.setText(techniqueTitle);
+        handWashScore.setText(String.valueOf(scoreValue));
     }
 
     @Override
