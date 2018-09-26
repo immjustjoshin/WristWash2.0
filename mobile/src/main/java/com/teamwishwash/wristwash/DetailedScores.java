@@ -17,17 +17,25 @@ public class DetailedScores extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // gets name of hand washing technique that was clicked on
+        // gets name of hand washing technique and score that was clicked on
         Intent intent = getIntent();
         String techniqueTitle = intent.getStringExtra(MainActivity.HAND_WASHING_TECHNIQUE);
         double scoreValue = intent.getDoubleExtra(MainActivity.HAND_WASH_SCORE, 0.0);
 
-        // displays hand washing technique name
+        // intializes TextView layouts
         TextView handWashingTechnique = (TextView) findViewById(R.id.handWashTechniqueTextView);
         TextView handWashScore = (TextView) findViewById(R.id.detailScoreTextView);
 
+        //sets text & color
         handWashingTechnique.setText(techniqueTitle);
         handWashScore.setText(String.valueOf(scoreValue));
+        if (scoreValue >= 0 && scoreValue < 4) {
+            handWashScore.setTextColor(getResources().getColor(R.color.red));
+        } else if (scoreValue >=4 && scoreValue < 8) {
+            handWashScore.setTextColor(getResources().getColor(R.color.yellow_orange));
+        } else if (scoreValue >= 8 && scoreValue <= 10) {
+            handWashScore.setTextColor(getResources().getColor(R.color.green));
+        }
     }
 
     @Override

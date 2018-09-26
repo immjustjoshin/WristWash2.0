@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:text="@string/total_score"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:textSize="30sp"/>
 
     <TextView
@@ -37,6 +37,6 @@
         android:paddingTop="5dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:divider="#00000000"
+        android:divider="@color/transparent"
         android:dividerHeight="7dp" />
 </RelativeLayout>

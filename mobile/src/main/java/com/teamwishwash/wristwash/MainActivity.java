@@ -34,9 +34,16 @@ public class MainActivity extends AppCompatActivity {
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", 7.21));
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", 2.35));
 
-        // sets final total score using data above. Below is just an example value based on data above.
+        // sets final total score & color using data above. Below is just an example value based on data above.
         double average = (9.48 + 4.63 + 7.21 + 2.35) / 4;
         score.setText(String.valueOf(average));
+        if (average >= 0 && average < 4) {
+            score.setTextColor(getResources().getColor(R.color.red));
+        } else if (average >=4 && average < 8) {
+            score.setTextColor(getResources().getColor(R.color.yellow_orange));
+        } else if (average >= 8 && average <= 10) {
+            score.setTextColor(getResources().getColor(R.color.green));
+        }
 
         // Init custom list adapter
         HandWashListAdapter detailScoresAdapter = new HandWashListAdapter(getApplicationContext(), handWashTechniqueList);
