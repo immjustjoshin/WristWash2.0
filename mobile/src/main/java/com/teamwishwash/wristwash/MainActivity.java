@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                         .show();            }
         });
 
+        FileUtil.verifyStoragePermissions(this);
+
         // data for list of hand washing techniques. We can get data from smartwatch here. Below are just random data values.
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", 9.48));
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", 4.63));
