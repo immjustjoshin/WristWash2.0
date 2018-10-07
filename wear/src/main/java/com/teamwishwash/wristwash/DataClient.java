@@ -5,6 +5,7 @@ package com.teamwishwash.wristwash;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -97,10 +98,12 @@ public class DataClient {
 
     private void send(PutDataRequest putDataRequest) {
         if (validateConnection()) {
+
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                 @Override
                 public void onResult(DataApi.DataItemResult dataItemResult) {
                     //use dataItemResult.getStatus().isSuccess() to see if successful
+                    Log.v(TAG, "Sending sensor data: " + dataItemResult.getStatus().isSuccess());
                 }
             });
         }
