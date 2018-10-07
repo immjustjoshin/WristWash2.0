@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:text="@string/total_score"
         android:textColor="@color/black"
         android:textSize="30sp"/>
@@ -27,16 +27,41 @@
         android:textSize="40sp"
         android:text="@string/score" />
 
-
     <ListView
         android:id="@+id/detailsListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/scoreTextView"
-        android:layout_marginTop="20dp"
         android:paddingTop="5dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:divider="@color/transparent"
         android:dividerHeight="7dp" />
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detailsListView"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/start" />
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/stop" />
+    </LinearLayout>
+
 </RelativeLayout>
