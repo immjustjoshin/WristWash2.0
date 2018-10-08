@@ -3,6 +3,7 @@ package com.teamwishwash.wristwash;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -90,23 +91,33 @@ public class MainActivity extends AppCompatActivity {
                         .show();            }
         });
 
+        // asks user for storage permissions
         FileUtil.verifyStoragePermissions(this);
 
-        // data for list of hand washing techniques. We can get data from smartwatch here. Below are just random data values.
+        /** Below is data for list of hand washing techniques.
+         * We can get data from smartwatch here or just create a separate
+         * class for it. Below are just random data values. First,
+         * access the gyroscope and accelerometer csv files from motion-data
+         * folder. Then push those files to a class where it analyzes the data
+         * and then returns a score for each individual hand washing technique.
+         * */
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", 9.48));
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", 4.63));
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", 7.21));
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", 2.35));
 
-        // sets final total score & color using data above. Below is just an example value based on data above.
+        /** Sets final total score & color using data above or the scores
+         * for each hand washing technique.
+         * Below is just an example value based on data above by
+         * taking the average of the four hand washing technique scores. */
         double average = (9.48 + 4.63 + 7.21 + 2.35) / 4;
         score.setText(String.valueOf(average));
         if (average >= 0 && average < 4) {
-            score.setTextColor(getResources().getColor(R.color.red));
+            score.setTextColor(getResources().getColor(R.color.red, getTheme()));
         } else if (average >=4 && average < 8) {
-            score.setTextColor(getResources().getColor(R.color.yellow_orange));
+            score.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
         } else if (average >= 8 && average <= 10) {
-            score.setTextColor(getResources().getColor(R.color.green));
+            score.setTextColor(getResources().getColor(R.color.green, getTheme()));
         }
 
         // Init custom list adapter

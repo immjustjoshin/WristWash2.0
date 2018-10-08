@@ -25,16 +25,17 @@ public class DetailedScores extends AppCompatActivity {
         // intializes TextView layouts
         TextView handWashingTechnique = (TextView) findViewById(R.id.handWashTechniqueTextView);
         TextView handWashScore = (TextView) findViewById(R.id.detailScoreTextView);
+        TextView description = (TextView) findViewById(R.id.descriptionTextView);
 
         //sets text & color
         handWashingTechnique.setText(techniqueTitle);
         handWashScore.setText(String.valueOf(scoreValue));
         if (scoreValue >= 0 && scoreValue < 4) {
-            handWashScore.setTextColor(getResources().getColor(R.color.red));
+            handWashScore.setTextColor(getResources().getColor(R.color.red, getTheme()));
         } else if (scoreValue >=4 && scoreValue < 8) {
-            handWashScore.setTextColor(getResources().getColor(R.color.yellow_orange));
+            handWashScore.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
         } else if (scoreValue >= 8 && scoreValue <= 10) {
-            handWashScore.setTextColor(getResources().getColor(R.color.green));
+            handWashScore.setTextColor(getResources().getColor(R.color.green, getTheme()));
         }
     }
 

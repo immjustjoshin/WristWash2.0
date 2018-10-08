@@ -48,5 +48,5 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:textSize="15sp"
-        android:text="Random description that talks about how terrible your score and technique was and tells you the most amazing way that you can improve your hand washing technique in order to become the master of hand washing! >:D" />
+        android:text="@string/description"/>
 </RelativeLayout>
