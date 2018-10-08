@@ -32,10 +32,13 @@ public class DetailedScores extends AppCompatActivity {
         handWashScore.setText(String.valueOf(scoreValue));
         if (scoreValue >= 0 && scoreValue < 4) {
             handWashScore.setTextColor(getResources().getColor(R.color.red, getTheme()));
+            description.setText(getString(R.string.badScoreDescription));
         } else if (scoreValue >=4 && scoreValue < 8) {
             handWashScore.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
+            description.setText(getString(R.string.averageDescription));
         } else if (scoreValue >= 8 && scoreValue <= 10) {
             handWashScore.setTextColor(getResources().getColor(R.color.green, getTheme()));
+            description.setText(getString(R.string.goodScoreDescription));
         }
     }
 

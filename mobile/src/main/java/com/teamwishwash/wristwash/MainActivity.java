@@ -3,7 +3,6 @@ package com.teamwishwash.wristwash;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
                 startIntent.setAction(Constants.ACTION.START_FOREGROUND);
                 startService(startIntent);
-                Toast.makeText(getApplicationContext(), "Collecting Data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Collecting Data!", Toast.LENGTH_LONG).show();
                 remoteSensorManager.startSensorService();
             }
         });
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
                 stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
                 startService(stopIntent);
-                Toast.makeText(getApplicationContext(), "Stopping Data Collection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Stopping Data Collection", Toast.LENGTH_LONG).show();
                 remoteSensorManager.stopSensorService();
             }
         });
