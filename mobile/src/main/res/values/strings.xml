@@ -7,6 +7,8 @@
     <string name="stop">Stop</string>
     <string name="delete">Delete Data</string>
     <string name="description">Description</string>
+    <string name="training_mode">Training Mode</string>
+    <string name="regular_mode">Regular Mode</string>
     <string name="goodScoreDescription">Your hand washing technique
         is great! Continue with the same techniques you are currently
         using to ensure the highest quality of cleanliness for your hands.
