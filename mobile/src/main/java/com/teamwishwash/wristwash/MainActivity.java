@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         Button startButton = (Button) findViewById(R.id.startButton);
         Button stopButton = (Button) findViewById(R.id.stopButton);
         Button deleteButton = (Button) findViewById(R.id.deleteButton);
+        RadioButton trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
+        trainingButton.setChecked(true);
+        RadioButton regularButton = (RadioButton) findViewById(R.id.regularModeButton);
         ListView detailList = (ListView) findViewById(R.id.detailsListView);
         List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
 
