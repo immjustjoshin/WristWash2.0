@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
     public static final String HAND_WASH_SCORE = "hand wash score";
-    public static boolean collectTrainingData = false;
+    public static boolean collectTrainingData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
         // declaring screen layouts
-        TextView totalScore = (TextView) findViewById(R.id.totalScoreTextView);
         TextView score = (TextView) findViewById(R.id.scoreTextView);
         Button startButton = (Button) findViewById(R.id.startButton);
         Button stopButton = (Button) findViewById(R.id.stopButton);
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         RadioButton regularButton = (RadioButton) findViewById(R.id.regularModeButton);
         ListView detailList = (ListView) findViewById(R.id.detailsListView);
         List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
-        regularButton.setChecked(true);
+        trainingButton.setChecked(true);
 
         final SharedPreferences sharedPrefs = getSharedPreferences("myPref", 0);
         final SharedPreferences.Editor editor = sharedPrefs.edit();
