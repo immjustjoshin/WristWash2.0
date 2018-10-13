@@ -26,7 +26,10 @@ public class FileUtil {
     private static final String TAG = FileUtil.class.getName();
 
     /** default name of the application's directory */
-    private static final String DEFAULT_DIRECTORY = "motion-data";
+    private static final String DEFAULT_MOTION_DATA_DIRECTORY = "motion-data";
+
+    /** default name of the training data's directory*/
+    private static final String DEFAULT_TRAINING_DATA_DIRECTORY = "training-data";
 
     /** CSV extenstion */
     private static final String CSV_EXTENSION = ".csv";
@@ -60,16 +63,33 @@ public class FileUtil {
     }
 
     /**
-     * Returns a root directory where the logging takes place
-     * @return File of the root directory
+     * Returns a motion data directory where the logging takes place
+     * @return File of the motion data directory
      */
-    private static File getStorageLocation(){
-        File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), DEFAULT_DIRECTORY);
-        if(!root.exists())
-            if (!root.mkdir()){
-                Log.w(TAG, "Failed to create directory! It may already exist");
+    public static File getMotionDataFile(){
+        File mdDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), DEFAULT_MOTION_DATA_DIRECTORY);
+
+        if(!mdDirectory.exists()) {
+            if (!mdDirectory.mkdir()) {
+                Log.w(TAG, "Failed to create motion data directory! It may already exist");
             }
-        return root;
+        }
+        return mdDirectory;
+    }
+
+    /**
+     * Returns a training data directory where the logging takes place
+     * @return File of the training data directory
+     */
+    public static File getTrainingDataFile() {
+        File tdDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), DEFAULT_TRAINING_DATA_DIRECTORY);
+
+        if (!tdDirectory.exists()) {
+            if (!tdDirectory.mkdir()) {
+                Log.w(TAG, "Failed to create training data directory! It may already exist");
+            }
+        }
+        return tdDirectory;
     }
 
     /**
@@ -77,9 +97,14 @@ public class FileUtil {
      * @param filename file name (without extension!)
      * @return the file writer for the particular filename
      */
-    public static BufferedWriter getFileWriter(String filename) {
-        File rootDir = getStorageLocation();
-        String fullFileName = filename + CSV_EXTENSION;
+    public static BufferedWriter getFileWriter(String filename, int number) {
+        File rootDir;
+        if (MainActivity.getTrainingData()) {
+            rootDir = getTrainingDataFile();
+        } else {
+            rootDir = getMotionDataFile();
+        }
+        String fullFileName = filename + number + CSV_EXTENSION;
 
         BufferedWriter out = null;
         try {
@@ -121,10 +146,14 @@ public class FileUtil {
      * @return true if successfully deleted
      */
     public static boolean deleteData() {
-        boolean deleted = false;
-        File root = getStorageLocation();
-        if (root != null) {
-            File files[] = root.listFiles();
+        boolean motionDeleted = false;
+        boolean trainingDeleted = false;
+        File motionFile = getMotionDataFile();
+        File trainingFile = getTrainingDataFile();
+
+        // deletes motion data directory
+        if (motionFile != null) {
+            File files[] = motionFile.listFiles();
             if (files != null) {
                 for (File file : files) {
                     if (!file.delete()) {
@@ -132,8 +161,21 @@ public class FileUtil {
                     }
                 }
             }
-            deleted = root.delete();
+            motionDeleted = motionFile.delete();
         }
-        return deleted;
+
+        // deletes training data directory
+        if (trainingFile != null) {
+            File files[] = trainingFile.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (!file.delete()) {
+                        Log.d(TAG, "Deleting file failed: " + file.getName());
+                    }
+                }
+            }
+            trainingDeleted = trainingFile.delete();
+        }
+        return motionDeleted && trainingDeleted;
     }
 }

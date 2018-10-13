@@ -3,6 +3,7 @@ package com.teamwishwash.wristwash;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +25,12 @@ public class MainActivity extends AppCompatActivity {
     /** The sensor manager which handles sensors on the wearable device remotely */
     private RemoteSensorManager remoteSensorManager;
 
+    /** CSV file number for multiple files*/
+    public static int number = 0;
+
     public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
     public static final String HAND_WASH_SCORE = "hand wash score";
+    public static boolean collectTrainingData = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +45,28 @@ public class MainActivity extends AppCompatActivity {
         Button startButton = (Button) findViewById(R.id.startButton);
         Button stopButton = (Button) findViewById(R.id.stopButton);
         Button deleteButton = (Button) findViewById(R.id.deleteButton);
-        RadioButton trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
-        trainingButton.setChecked(true);
+        final RadioButton trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
         RadioButton regularButton = (RadioButton) findViewById(R.id.regularModeButton);
         ListView detailList = (ListView) findViewById(R.id.detailsListView);
         List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
+        regularButton.setChecked(true);
+
+        final SharedPreferences sharedPrefs = getSharedPreferences("myPref", 0);
+        final SharedPreferences.Editor editor = sharedPrefs.edit();
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (trainingButton.isChecked()) {
+                    collectTrainingData = true;
+                    number = sharedPrefs.getInt("number", 0);
+                    number++;
+                    editor.putInt("number", number);
+                    editor.apply();
+                } else {
+                    collectTrainingData = false;
+                }
                 Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
                 startIntent.setAction(Constants.ACTION.START_FOREGROUND);
                 startService(startIntent);
@@ -151,5 +168,24 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(HAND_WASHING_TECHNIQUE, technique);
         intent.putExtra(HAND_WASH_SCORE, score);
         startActivity(intent);
+    }
+
+    /**
+     * Determines whether the data being collected is for
+     * training data or regular motion data.
+     * @return TRUE for training data & FALSE for regular
+     * motion data.
+     */
+    public static boolean getTrainingData() {
+        return collectTrainingData;
+    }
+
+    /**
+     * Determine what the file number is for the multiple
+     * training data files.
+     * @return file number for training data file
+     */
+    public static int getFileNumber() {
+        return number;
     }
 }
