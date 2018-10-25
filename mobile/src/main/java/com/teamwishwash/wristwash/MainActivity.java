@@ -26,11 +26,24 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** CSV file number for multiple files*/
-    public static int number = 0;
+    public static int fileNumber = 0;
 
     public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
     public static final String HAND_WASH_SCORE = "hand wash score";
     public static boolean collectTrainingData = true;
+
+    // declaring screen layouts
+    TextView score;
+    Button startButton;
+    Button stopButton;
+    Button deleteButton;
+    RadioButton trainingButton;
+    RadioButton regularButton;
+    ListView detailList;
+    List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
+
+    SharedPreferences sharedPrefs;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +53,18 @@ public class MainActivity extends AppCompatActivity {
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
         // declaring screen layouts
-        TextView score = (TextView) findViewById(R.id.scoreTextView);
-        Button startButton = (Button) findViewById(R.id.startButton);
-        Button stopButton = (Button) findViewById(R.id.stopButton);
-        Button deleteButton = (Button) findViewById(R.id.deleteButton);
-        final RadioButton trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
-        RadioButton regularButton = (RadioButton) findViewById(R.id.regularModeButton);
-        ListView detailList = (ListView) findViewById(R.id.detailsListView);
-        List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
-        trainingButton.setChecked(true);
+        score = (TextView) findViewById(R.id.scoreTextView);
+        startButton = (Button) findViewById(R.id.startButton);
+        stopButton = (Button) findViewById(R.id.stopButton);
+        deleteButton = (Button) findViewById(R.id.deleteButton);
+        trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
+        regularButton = (RadioButton) findViewById(R.id.regularModeButton);
+        detailList = (ListView) findViewById(R.id.detailsListView);
 
-        final SharedPreferences sharedPrefs = getSharedPreferences("myPref", 0);
-        final SharedPreferences.Editor editor = sharedPrefs.edit();
+        sharedPrefs = getSharedPreferences("myPref", 0);
+        editor = sharedPrefs.edit();
+
+        trainingButton.setChecked(true);
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -59,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (trainingButton.isChecked()) {
                     collectTrainingData = true;
-                    number = sharedPrefs.getInt("number", 0);
-                    number++;
-                    editor.putInt("number", number);
+                    fileNumber = sharedPrefs.getInt("fileNumber", 0);
+                    fileNumber++;
+                    editor.putInt("fileNumber", fileNumber);
                     editor.apply();
                 } else {
                     collectTrainingData = false;
@@ -98,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 if (FileUtil.deleteData()) {
                                     Toast.makeText(getApplicationContext(), "Data successfully deleted.", Toast.LENGTH_LONG).show();
+                                    fileNumber = sharedPrefs.getInt("fileNumber", 0);
+                                    fileNumber = 0;
+                                    editor.putInt("fileNumber", fileNumber);
+                                    editor.apply();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Error: Directory may not have been deleted!", Toast.LENGTH_LONG).show();
                                 }
@@ -110,8 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();            }
         });
 
-        // asks user for storage permissions
-        FileUtil.verifyStoragePermissions(this);
+        verifyPermissions();
 
         /** Below is data for list of hand washing techniques.
          * We can get data from smartwatch here or just create a separate
@@ -170,6 +186,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Asks the user for storage permissions
+     */
+    public void verifyPermissions() {
+        FileUtil.verifyStoragePermissions(MainActivity.this);
+    }
+
+    /**
      * Determines whether the data being collected is for
      * training data or regular motion data.
      * @return TRUE for training data & FALSE for regular
@@ -185,6 +208,6 @@ public class MainActivity extends AppCompatActivity {
      * @return file number for training data file
      */
     public static int getFileNumber() {
-        return number;
+        return fileNumber;
     }
 }

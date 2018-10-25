@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 public class MainActivity extends WearableActivity {
 
-    private TextView mTextView;
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

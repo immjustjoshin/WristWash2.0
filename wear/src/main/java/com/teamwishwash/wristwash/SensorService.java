@@ -172,7 +172,7 @@ public class SensorService extends Service implements SensorEventListener {
             //default code
             //mSensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_GAME);
             //changed to 100 Hz
-            mSensorManager.registerListener(this, accelSensor, 100000,100000);
+            mSensorManager.registerListener(this, accelSensor, 10000);
         } else {
             Log.w(TAG, "No Accelerometer found");
         }
@@ -181,7 +181,7 @@ public class SensorService extends Service implements SensorEventListener {
             //default code
             //mSensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_GAME);
             //changed to 100 Hz
-            mSensorManager.registerListener(this, gyroSensor, 100000, 100000);
+            mSensorManager.registerListener(this, gyroSensor, 10000);
         } else {
             Log.w(TAG, "No gyroscope found");
         }
