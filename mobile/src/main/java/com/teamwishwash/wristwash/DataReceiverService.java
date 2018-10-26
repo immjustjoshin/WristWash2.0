@@ -20,6 +20,11 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import com.teamwishwash.shared.SharedConstants;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
@@ -79,12 +84,16 @@ public class DataReceiverService extends WearableListenerService {
 
         for (int i = 0; i < timestamps.length; i++){
             long timestamp = timestamps[i];
+            Date date = new Date(timestamp);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+            formatter.setTimeZone(TimeZone.getDefault());
+            String timeStampFormatted = formatter.format(date);
             float x = values[3*i];
             float y = values[3*i+1];
             float z = values[3*i+2];
 
             //TODO: probably better to create multiline string and save that instead of writing each line separately
-            String line = timestamp + "," + x + "," + y + "," + z;
+            String line = timeStampFormatted + "," + x + "," + y + "," + z;
 
             //broadcast line to data writer service
             Intent intent = new Intent();

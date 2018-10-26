@@ -16,7 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -168,23 +167,24 @@ public class SensorService extends Service implements SensorEventListener {
         gyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         accelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        if (accelSensor != null) {
+        if (accelSensor != null && gyroSensor != null) {
             //default code
             //mSensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_GAME);
             //changed to 100 Hz
             mSensorManager.registerListener(this, accelSensor, 10000);
-        } else {
-            Log.w(TAG, "No Accelerometer found");
-        }
-
-        if (gyroSensor != null) {
-            //default code
-            //mSensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_GAME);
-            //changed to 100 Hz
             mSensorManager.registerListener(this, gyroSensor, 10000);
         } else {
-            Log.w(TAG, "No gyroscope found");
+            Log.w(TAG, "No Accelerometer/Gyroscope found");
         }
+
+//        if (gyroSensor != null) {
+//            //default code
+//            //mSensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_GAME);
+//            //changed to 100 Hz
+//            mSensorManager.registerListener(this, gyroSensor, 10000);
+//        } else {
+//            Log.w(TAG, "No gyroscope found");
+//        }
     }
 
     /**
@@ -202,11 +202,13 @@ public class SensorService extends Service implements SensorEventListener {
         //TODO: When the service is ended, the remaining data is not saved because it does not fill buffer
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             synchronized (this) { //add sensor data to the appropriate buffer
-                //accelTimestamps[accelIndex] = event.timestamp;
-                accelTimestamps[accelIndex] = System.currentTimeMillis()
-                        + ((event.timestamp
-                        -  SystemClock.elapsedRealtimeNanos())/1000000L);
-                accelTimestamps[accelIndex] = accelTimestamps[accelIndex] / 1000;
+//                accelTimestamps[accelIndex] = event.timestamp;
+//                accelTimestamps[accelIndex] = System.currentTimeMillis()
+//                        + ((event.timestamp
+//                        -  SystemClock.elapsedRealtimeNanos())/1000000L);
+//                accelTimestamps[accelIndex] = accelTimestamps[accelIndex] / 1000;
+
+                accelTimestamps[accelIndex] = System.currentTimeMillis();
                 accelValues[3 * accelIndex] = event.values[0];
                 accelValues[3 * accelIndex + 1] = event.values[1];
                 accelValues[3 * accelIndex + 2] = event.values[2];
@@ -218,7 +220,7 @@ public class SensorService extends Service implements SensorEventListener {
             }
         }else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             synchronized (this) {
-                gyroTimestamps[gyroIndex] = event.timestamp;
+                gyroTimestamps[gyroIndex] = System.currentTimeMillis();
                 gyroValues[3 * gyroIndex] = event.values[0];
                 gyroValues[3 * gyroIndex + 1] = event.values[1];
                 gyroValues[3 * gyroIndex + 2] = event.values[2];
