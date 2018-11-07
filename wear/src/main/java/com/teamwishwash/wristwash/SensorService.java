@@ -130,11 +130,13 @@ public class SensorService extends Service implements SensorEventListener {
             startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, notification); //id is arbitrary, so we choose id=1
 
             registerSensors();
-        } else if (intent.getAction().equals(Constants.ACTION.RECORD_LABEL)) {
-            //labelTimestamp = SystemClock.elapsedRealtimeNanos();
-            labelTimestamp = System.currentTimeMillis()/1000;
-            startListening();
-        } else if (intent.getAction().equals(Constants.ACTION.STOP_SERVICE)) {
+        }
+//        else if (intent.getAction().equals(Constants.ACTION.RECORD_LABEL)) {
+//            //labelTimestamp = SystemClock.elapsedRealtimeNanos();
+//            labelTimestamp = System.currentTimeMillis()/1000;
+//            startListening();
+//        }
+        else if (intent.getAction().equals(Constants.ACTION.STOP_SERVICE)) {
             unregisterSensors();
             //stopForeground(true);
             stopSelf();
@@ -340,7 +342,7 @@ public class SensorService extends Service implements SensorEventListener {
                 long timestamp = (command.equalsIgnoreCase(SharedConstants.VOICE_COMMANDS.START_COMMAND) ?
                         System.currentTimeMillis()/1000 : labelTimestamp);
 
-                client.sendLabel(timestamp, activity, command);
+//                client.sendLabel(timestamp, activity, command);
             }
         }
 

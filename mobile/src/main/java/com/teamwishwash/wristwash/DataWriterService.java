@@ -71,21 +71,21 @@ public class DataWriterService extends Service{
 //                        FileUtil.writeToFile(line, gyroWriter);
 //                    }
 //                }
-                else if (intent.getAction().equals(Constants.ACTION.SEND_LABEL)) {
-                    String line = intent.getStringExtra(Constants.VALUES.LABEL);
-                    synchronized (labelWriter) {
-                        FileUtil.writeToFile(line, labelWriter);
-                    }
-                    try {
-                        /** to make sure the labels appear readily, flush the writer. We can do this
-                        with the label writer right away because labels are infrequent enough. We
-                        do not need to do this with the gyro/accel writers because the data is so
-                        frequent that the buffer fills and is flushed automatically */
-                        labelWriter.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                else if (intent.getAction().equals(Constants.ACTION.SEND_LABEL)) {
+//                    String line = intent.getStringExtra(Constants.VALUES.LABEL);
+//                    synchronized (labelWriter) {
+//                        FileUtil.writeToFile(line, labelWriter);
+//                    }
+//                    try {
+//                        /** to make sure the labels appear readily, flush the writer. We can do this
+//                        with the label writer right away because labels are infrequent enough. We
+//                        do not need to do this with the gyro/accel writers because the data is so
+//                        frequent that the buffer fills and is flushed automatically */
+//                        labelWriter.flush();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
         }
     };
