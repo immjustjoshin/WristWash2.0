@@ -148,13 +148,13 @@ public class SensorService extends Service implements SensorEventListener {
      */
     private void registerSensors(){
         //initialize buffers:
-        gyroTimestamps = new long[BUFFER_SIZE];
-        gyroValues = new float[BUFFER_SIZE*3];
+//        gyroTimestamps = new long[BUFFER_SIZE];
+//        gyroValues = new float[BUFFER_SIZE*3];
 
         accelTimestamps = new long[BUFFER_SIZE];
         accelValues = new float[BUFFER_SIZE*3];
 
-        gyroIndex = 0;
+//        gyroIndex = 0;
         accelIndex = 0;
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -164,15 +164,15 @@ public class SensorService extends Service implements SensorEventListener {
             return;
         }
 
-        gyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+//        gyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         accelSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        if (accelSensor != null && gyroSensor != null) {
+        if (accelSensor != null) {
             //default code
             //mSensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_GAME);
             //changed to 100 Hz
             mSensorManager.registerListener(this, accelSensor, 10000);
-            mSensorManager.registerListener(this, gyroSensor, 10000);
+//            mSensorManager.registerListener(this, gyroSensor, 10000);
         } else {
             Log.w(TAG, "No Accelerometer/Gyroscope found");
         }
@@ -193,7 +193,7 @@ public class SensorService extends Service implements SensorEventListener {
     private void unregisterSensors() {
         if (mSensorManager != null) {
             mSensorManager.unregisterListener(this, accelSensor);
-            mSensorManager.unregisterListener(this, gyroSensor);
+//            mSensorManager.unregisterListener(this, gyroSensor);
         }
     }
 
@@ -218,19 +218,21 @@ public class SensorService extends Service implements SensorEventListener {
                     accelIndex = 0;
                 }
             }
-        }else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            synchronized (this) {
-                gyroTimestamps[gyroIndex] = System.currentTimeMillis();
-                gyroValues[3 * gyroIndex] = event.values[0];
-                gyroValues[3 * gyroIndex + 1] = event.values[1];
-                gyroValues[3 * gyroIndex + 2] = event.values[2];
-                gyroIndex++;
-                if (gyroIndex >= BUFFER_SIZE) {
-                    client.sendSensorData(Sensor.TYPE_GYROSCOPE, gyroTimestamps.clone(), gyroValues.clone());
-                    gyroIndex = 0;
-                }
-            }
-        }else{
+        }
+//        else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+//            synchronized (this) {
+//                gyroTimestamps[gyroIndex] = System.currentTimeMillis();
+//                gyroValues[3 * gyroIndex] = event.values[0];
+//                gyroValues[3 * gyroIndex + 1] = event.values[1];
+//                gyroValues[3 * gyroIndex + 2] = event.values[2];
+//                gyroIndex++;
+//                if (gyroIndex >= BUFFER_SIZE) {
+//                    client.sendSensorData(Sensor.TYPE_GYROSCOPE, gyroTimestamps.clone(), gyroValues.clone());
+//                    gyroIndex = 0;
+//                }
+//            }
+//        }
+        else{
             Log.w(TAG, "Sensor Not Supported!");
         }
     }

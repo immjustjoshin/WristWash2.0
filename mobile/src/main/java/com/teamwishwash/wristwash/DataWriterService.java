@@ -64,12 +64,14 @@ public class DataWriterService extends Service{
                     synchronized (accelWriter) {
                         FileUtil.writeToFile(line, accelWriter);
                     }
-                } else if (intent.getAction().equals(Constants.ACTION.SEND_GYROSCOPE)) {
-                    String line = intent.getStringExtra(Constants.VALUES.SENSOR_DATA);
-                    synchronized (gyroWriter) {
-                        FileUtil.writeToFile(line, gyroWriter);
-                    }
-                } else if (intent.getAction().equals(Constants.ACTION.SEND_LABEL)) {
+                }
+//                else if (intent.getAction().equals(Constants.ACTION.SEND_GYROSCOPE)) {
+//                    String line = intent.getStringExtra(Constants.VALUES.SENSOR_DATA);
+//                    synchronized (gyroWriter) {
+//                        FileUtil.writeToFile(line, gyroWriter);
+//                    }
+//                }
+                else if (intent.getAction().equals(Constants.ACTION.SEND_LABEL)) {
                     String line = intent.getStringExtra(Constants.VALUES.LABEL);
                     synchronized (labelWriter) {
                         FileUtil.writeToFile(line, labelWriter);
@@ -110,8 +112,8 @@ public class DataWriterService extends Service{
         unregisterReceiver(receiver);
         if (accelWriter != null)
             FileUtil.closeWriter(accelWriter);
-        if (gyroWriter != null)
-            FileUtil.closeWriter(gyroWriter);
+//        if (gyroWriter != null)
+//            FileUtil.closeWriter(gyroWriter);
         if (labelWriter != null)
             FileUtil.closeWriter(labelWriter);
 
@@ -143,7 +145,7 @@ public class DataWriterService extends Service{
             Notification notification = new NotificationCompat.Builder(this)
                     .setContentTitle("My Gestures")
                     .setTicker("My Gestures")
-                    .setContentText("Collecting Accelerometer/Gyroscope Data")
+                    .setContentText("Collecting Accelerometer Data")
                     .setSmallIcon(R.drawable.ic_launcher)
                     .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                     .setContentIntent(pendingIntent)

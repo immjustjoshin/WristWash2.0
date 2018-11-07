@@ -101,11 +101,12 @@ public class DataReceiverService extends WearableListenerService {
                 intent.putExtra(Constants.VALUES.SENSOR_DATA, line);
                 intent.setAction(Constants.ACTION.SEND_ACCELEROMETER);
                 sendBroadcast(intent);
-            }else if (sensorType == Sensor.TYPE_GYROSCOPE) {
-                intent.putExtra(Constants.VALUES.SENSOR_DATA, line);
-                intent.setAction(Constants.ACTION.SEND_GYROSCOPE);
-                sendBroadcast(intent);
             }
+//            else if (sensorType == Sensor.TYPE_GYROSCOPE) {
+//                intent.putExtra(Constants.VALUES.SENSOR_DATA, line);
+//                intent.setAction(Constants.ACTION.SEND_GYROSCOPE);
+//                sendBroadcast(intent);
+//            }
 
             //also log the first value just for debugging purposes
             if (sensorType == Sensor.TYPE_ACCELEROMETER && i == 1)

@@ -31,6 +31,9 @@ public class FileUtil {
     /** default name of the training data's directory*/
     private static final String DEFAULT_TRAINING_DATA_DIRECTORY = "training-data";
 
+    /** default name of the raw data's directory*/
+    private static final String DEFAULT_RAW_DATA_DIRECTORY = "raw-data";
+
     /** CSV extenstion */
     private static final String CSV_EXTENSION = ".csv";
 
