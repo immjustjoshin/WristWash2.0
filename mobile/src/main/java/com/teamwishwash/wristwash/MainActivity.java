@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String HAND_WASH_SCORE = "hand wash score";
 
     // declaring screen layouts
+    TextView totalScore;
     TextView score;
     Button startButton;
     Button stopButton;
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
         // declaring screen layouts
+        totalScore = (TextView) findViewById(R.id.totalScoreTextView);
         score = (TextView) findViewById(R.id.scoreTextView);
         startButton = (Button) findViewById(R.id.startButton);
         stopButton = (Button) findViewById(R.id.stopButton);
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPrefs = getSharedPreferences("myPref", 0);
         editor = sharedPrefs.edit();
+
+        String result = "";
+        try {
+            result = pythonRequests.getScore("2", "2");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        totalScore.setText(result);
+
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
