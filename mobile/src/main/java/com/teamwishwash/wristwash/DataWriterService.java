@@ -48,11 +48,11 @@ public class DataWriterService extends Service{
     /** Buffered writer used to log the accelerometer data */
     private final BufferedWriter accelWriter = FileUtil.getFileWriter(ACCEL_TAG, MainActivity.getFileNumber());
 
-    /** Buffered writer used to log the gyroscope data */
-    private final BufferedWriter gyroWriter = FileUtil.getFileWriter(GYRO_TAG, MainActivity.getFileNumber());
-
-    /** Buffered writer used to log the reported labels */
-    private final BufferedWriter labelWriter = FileUtil.getFileWriter(LABEL_TAG, MainActivity.getFileNumber());
+//    /** Buffered writer used to log the gyroscope data */
+//    private final BufferedWriter gyroWriter = FileUtil.getFileWriter(GYRO_TAG, MainActivity.getFileNumber());
+//
+//    /** Buffered writer used to log the reported labels */
+//    private final BufferedWriter labelWriter = FileUtil.getFileWriter(LABEL_TAG, MainActivity.getFileNumber());
 
     /** used to receive messages from other components of the handheld app through intents, i.e. receive labels **/
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -114,8 +114,8 @@ public class DataWriterService extends Service{
             FileUtil.closeWriter(accelWriter);
 //        if (gyroWriter != null)
 //            FileUtil.closeWriter(gyroWriter);
-        if (labelWriter != null)
-            FileUtil.closeWriter(labelWriter);
+//        if (labelWriter != null)
+//            FileUtil.closeWriter(labelWriter);
 
         RemoteSensorManager.getInstance(this).stopSensorService();
         super.onDestroy();

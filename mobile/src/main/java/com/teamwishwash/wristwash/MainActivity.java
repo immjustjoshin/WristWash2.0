@@ -30,15 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
     public static final String HAND_WASH_SCORE = "hand wash score";
-    public static boolean collectTrainingData = true;
 
     // declaring screen layouts
     TextView score;
     Button startButton;
     Button stopButton;
     Button deleteButton;
-    RadioButton trainingButton;
-    RadioButton regularButton;
     ListView detailList;
     List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
 
@@ -57,28 +54,20 @@ public class MainActivity extends AppCompatActivity {
         startButton = (Button) findViewById(R.id.startButton);
         stopButton = (Button) findViewById(R.id.stopButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
-        trainingButton = (RadioButton) findViewById(R.id.trainingModeButton);
-        regularButton = (RadioButton) findViewById(R.id.regularModeButton);
         detailList = (ListView) findViewById(R.id.detailsListView);
 
         sharedPrefs = getSharedPreferences("myPref", 0);
         editor = sharedPrefs.edit();
 
-        trainingButton.setChecked(true);
-
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (trainingButton.isChecked()) {
-                    collectTrainingData = true;
-                    fileNumber = sharedPrefs.getInt("fileNumber", 0);
-                    fileNumber++;
-                    editor.putInt("fileNumber", fileNumber);
-                    editor.apply();
-                } else {
-                    collectTrainingData = false;
-                }
+                fileNumber = sharedPrefs.getInt("fileNumber", 0);
+                fileNumber++;
+                editor.putInt("fileNumber", fileNumber);
+                editor.apply();
+
                 Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
                 startIntent.setAction(Constants.ACTION.START_FOREGROUND);
                 startService(startIntent);
@@ -190,16 +179,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void verifyPermissions() {
         FileUtil.verifyStoragePermissions(MainActivity.this);
-    }
-
-    /**
-     * Determines whether the data being collected is for
-     * training data or regular motion data.
-     * @return TRUE for training data & FALSE for regular
-     * motion data.
-     */
-    public static boolean getTrainingData() {
-        return collectTrainingData;
     }
 
     /**

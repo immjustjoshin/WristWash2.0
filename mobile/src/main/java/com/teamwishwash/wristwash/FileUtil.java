@@ -28,12 +28,6 @@ public class FileUtil {
     /** default name of the application's directory */
     private static final String DEFAULT_MOTION_DATA_DIRECTORY = "motion-data";
 
-    /** default name of the training data's directory*/
-    private static final String DEFAULT_TRAINING_DATA_DIRECTORY = "training-data";
-
-    /** default name of the raw data's directory*/
-    private static final String DEFAULT_RAW_DATA_DIRECTORY = "raw-data";
-
     /** CSV extenstion */
     private static final String CSV_EXTENSION = ".csv";
 
@@ -81,32 +75,12 @@ public class FileUtil {
     }
 
     /**
-     * Returns a training data directory where the logging takes place
-     * @return File of the training data directory
-     */
-    public static File getTrainingDataFile() {
-        File tdDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), DEFAULT_TRAINING_DATA_DIRECTORY);
-
-        if (!tdDirectory.exists()) {
-            if (!tdDirectory.mkdir()) {
-                Log.w(TAG, "Failed to create training data directory! It may already exist");
-            }
-        }
-        return tdDirectory;
-    }
-
-    /**
      * Returns a file writer for a device
      * @param filename file name (without extension!)
      * @return the file writer for the particular filename
      */
     public static BufferedWriter getFileWriter(String filename, int number) {
-        File rootDir;
-        if (MainActivity.getTrainingData()) {
-            rootDir = getTrainingDataFile();
-        } else {
-            rootDir = getMotionDataFile();
-        }
+        File rootDir = getMotionDataFile();
         String fullFileName = filename + number + CSV_EXTENSION;
 
         BufferedWriter out = null;
@@ -150,9 +124,7 @@ public class FileUtil {
      */
     public static boolean deleteData() {
         boolean motionDeleted = false;
-        boolean trainingDeleted = false;
         File motionFile = getMotionDataFile();
-        File trainingFile = getTrainingDataFile();
 
         // deletes motion data directory
         if (motionFile != null) {
@@ -167,18 +139,6 @@ public class FileUtil {
             motionDeleted = motionFile.delete();
         }
 
-        // deletes training data directory
-        if (trainingFile != null) {
-            File files[] = trainingFile.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (!file.delete()) {
-                        Log.d(TAG, "Deleting file failed: " + file.getName());
-                    }
-                }
-            }
-            trainingDeleted = trainingFile.delete();
-        }
-        return motionDeleted && trainingDeleted;
+        return motionDeleted;
     }
 }
