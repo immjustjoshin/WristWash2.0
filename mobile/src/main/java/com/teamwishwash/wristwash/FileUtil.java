@@ -11,10 +11,14 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles file input/output operations, such as saving the accelerometer/gyroscope
@@ -79,9 +83,9 @@ public class FileUtil {
      * @param filename file name (without extension!)
      * @return the file writer for the particular filename
      */
-    public static BufferedWriter getFileWriter(String filename, int number) {
+    public static BufferedWriter getFileWriter(String filename, int fileNumber) {
         File rootDir = getMotionDataFile();
-        String fullFileName = filename + number + CSV_EXTENSION;
+        String fullFileName = filename + fileNumber + CSV_EXTENSION;
 
         BufferedWriter out = null;
         try {
@@ -140,5 +144,50 @@ public class FileUtil {
         }
 
         return motionDeleted;
+    }
+
+    /**
+     * This method will take the accelerometer data collected
+     * from the user and segment them into 6 different files.
+     * These 6 different files represent each of the 6 hand washing
+     * techniques. These 6 files will then be sent through preprocessing
+     * through a HTTP request call. Then the 6 preprocessed files will be sent
+     * to the confusion matrix through another HTTP request call that will
+     * return a score for each hand washing technique.
+     */
+    public static void segmentMotionData() {
+        File motionDataDirectory = getMotionDataFile();
+        File files[] = motionDataDirectory.listFiles();
+        File accelFile = files[0];
+//        List<ArrayList<Long>> data = new ArrayList();
+//        ArrayList<Long> line = new ArrayList();
+        List<ArrayList<Double>> data = new ArrayList<>();
+        BufferedReader br;
+
+        try {
+            String line;
+            br = new BufferedReader(new FileReader(accelFile));
+            ArrayList<Double> dataLine = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                dataLine = splitCSVLine(line);
+                data.add(dataLine);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<Double> splitCSVLine(String line) {
+        ArrayList<Double> result = new ArrayList<>();
+        if (line != null) {
+            String[] splitData = line.split(",");
+            for (int i = 1; i < splitData.length; i++) {
+                if (splitData[i] != null) {
+                    result.add(Double.valueOf(splitData[i]));
+                }
+            }
+        }
+        return result;
     }
 }

@@ -1,20 +1,14 @@
 package com.teamwishwash.wristwash;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,23 +18,18 @@ public class MainActivity extends AppCompatActivity {
     /** The sensor manager which handles sensors on the wearable device remotely */
     private RemoteSensorManager remoteSensorManager;
 
-    /** CSV file number for multiple files*/
-    public static int fileNumber = 0;
+    public static int gestureNumber = 1;
 
-    public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
-    public static final String HAND_WASH_SCORE = "hand wash score";
+    // layouts
+    TextView countDownTimer, instructions;
+    Button startButton, cancelButton, requestButton;
 
-    // declaring screen layouts
-    TextView totalScore;
-    TextView score;
-    Button startButton;
-    Button stopButton;
-    Button deleteButton;
-    ListView detailList;
-    List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
-
-    SharedPreferences sharedPrefs;
-    SharedPreferences.Editor editor;
+    // Timer variables
+    CountDownTimer mainTimer, prepTimer;
+    long mainTimeLeftInMilliSeconds = 10200;     // about 10 seconds
+    long prepTimeLeftInMilliSeconds = 3200;     // about 3 seconds
+    boolean mainTimerRunning = false;
+    boolean prepTimerRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,139 +39,208 @@ public class MainActivity extends AppCompatActivity {
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
         // declaring screen layouts
-        totalScore = (TextView) findViewById(R.id.totalScoreTextView);
-        score = (TextView) findViewById(R.id.scoreTextView);
         startButton = (Button) findViewById(R.id.startButton);
-        stopButton = (Button) findViewById(R.id.stopButton);
-        deleteButton = (Button) findViewById(R.id.deleteButton);
-        detailList = (ListView) findViewById(R.id.detailsListView);
+        cancelButton = (Button) findViewById(R.id.cancelButton);
+        countDownTimer = (TextView) findViewById(R.id.countDownTextView);
+        instructions = (TextView) findViewById(R.id.instructionsTextView);
 
-        sharedPrefs = getSharedPreferences("myPref", 0);
-        editor = sharedPrefs.edit();
 
-        String result = "";
-        try {
-            result = pythonRequests.getScore("2", "2");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        totalScore.setText(result);
+        requestButton = (Button) findViewById(R.id.requestButton);
+
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
+                startActivity(scoresIntent);
+//                FileUtil.segmentMotionData();
+            }
+        });
+
+//        requestButton.setOnClickListener(new View.OnClickListener() {
+//            String result = "";
+//            @Override
+//            public void onClick(View view) {
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            HTTPRequests.getScore(2, 2);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                thread.start();
+//            }
+//        });
 
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fileNumber = sharedPrefs.getInt("fileNumber", 0);
-                fileNumber++;
-                editor.putInt("fileNumber", fileNumber);
-                editor.apply();
+                startButton.setVisibility(View.GONE);
+                cancelButton.setVisibility(View.VISIBLE);
+                instructions.setVisibility(View.VISIBLE);
 
-                Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
-                startIntent.setAction(Constants.ACTION.START_FOREGROUND);
-                startService(startIntent);
-                Toast.makeText(getApplicationContext(), "Collecting Data!", Toast.LENGTH_LONG).show();
-                remoteSensorManager.startSensorService();
+                gestureNumber = 1;
+                startStopPrepTimer();
+
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        gestureNumber = 1;
+//                        startStopPrepTimer();
+//                    }
+//                },500);
             }
         });
 
-        //stop listener
-        stopButton.setOnClickListener(new View.OnClickListener() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
-                stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
-                startService(stopIntent);
-                Toast.makeText(getApplicationContext(), "Stopping Data Collection", Toast.LENGTH_LONG).show();
-                remoteSensorManager.stopSensorService();
+            public void onClick(View view) {
+                gestureNumber = -1;
+                stopPrepTimer();
+                stopMainTimer();
+                startButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.GONE);
+                instructions.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
+                FileUtil.deleteData();
             }
-        });
-
-        //delete listener
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("Are you sure you want to delete the gesture data?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                if (FileUtil.deleteData()) {
-                                    Toast.makeText(getApplicationContext(), "Data successfully deleted.", Toast.LENGTH_LONG).show();
-                                    fileNumber = sharedPrefs.getInt("fileNumber", 0);
-                                    fileNumber = 0;
-                                    editor.putInt("fileNumber", fileNumber);
-                                    editor.apply();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Error: Directory may not have been deleted!", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id){} //do nothing
-                        })
-                        .show();            }
         });
 
         verifyPermissions();
+    }
 
-        /** Below is data for list of hand washing techniques.
-         * We can get data from smartwatch here or just create a separate
-         * class for it. Below are just random data values. First,
-         * access the gyroscope and accelerometer csv files from motion-data
-         * folder. Then push those files to a class where it analyzes the data
-         * and then returns a score for each individual hand washing technique.
-         * */
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", 9.48));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", 4.63));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", 7.21));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", 2.35));
+    public void startStopPrepTimer() {
+        if (prepTimerRunning) {
+            stopPrepTimer();
+        } else {
+            startPrepTimer();
+        }
+    }
 
-        /** Sets final total score & color using data above or the scores
-         * for each hand washing technique.
-         * Below is just an example value based on data above by
-         * taking the average of the four hand washing technique scores. */
-        double average = (9.48 + 4.63 + 7.21 + 2.35) / 4;
-        score.setText(String.valueOf(average));
-        if (average >= 0 && average < 4) {
-            score.setTextColor(getResources().getColor(R.color.red, getTheme()));
-        } else if (average >=4 && average < 8) {
-            score.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
-        } else if (average >= 8 && average <= 10) {
-            score.setTextColor(getResources().getColor(R.color.green, getTheme()));
+    public void startPrepTimer() {
+        String text = "Next gesture in: 3s";
+        instructions.setText(text);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                prepTimerRunning = true;
+                prepTimer = new CountDownTimer(prepTimeLeftInMilliSeconds, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        prepTimeLeftInMilliSeconds = l;
+                        updatePrepTimer();
+                    }
+                    @Override
+                    public void onFinish() {}
+                }.start();
+            }
+        }, 400);
+    }
+
+    public void updatePrepTimer() {
+        int seconds = (int) prepTimeLeftInMilliSeconds / 1000;
+        String timeLeft;
+        if (seconds <= 0) {
+            stopPrepTimer();
+            startStopMainTimer();
+            timeLeft = "START WASHING!";
+            instructions.setText(timeLeft);
+        } else {
+            timeLeft = "Next gesture in: " + seconds + "s";
+            instructions.setText(timeLeft);
+        }
+    }
+
+    public void stopPrepTimer() {
+        prepTimeLeftInMilliSeconds = 3200;
+        prepTimerRunning = false;
+        String text = "Next gesture in: 3s";
+        instructions.setText(text);
+        if (prepTimer != null) {
+            prepTimer.cancel();
+        }
+    }
+
+    public void startStopMainTimer() {
+        if (mainTimerRunning) {
+            stopMainTimer();
+        } else {
+            startMainTimer();
+        }
+    }
+    public void startMainTimer() {
+        Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
+        startIntent.setAction(Constants.ACTION.START_FOREGROUND);
+        startService(startIntent);
+        remoteSensorManager.startSensorService();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mainTimerRunning = true;
+                mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        mainTimeLeftInMilliSeconds = l;
+                        updateMainTimer();
+                    }
+                    @Override
+                    public void onFinish() {}
+                }.start();
+            }
+        }, 600);
+    }
+
+    public void updateMainTimer() {
+        int seconds = (int) mainTimeLeftInMilliSeconds / 1000;
+        String timeLeft;
+        if (seconds <= 0) {
+            stopMainTimer();
+        } else {
+            timeLeft = seconds + "s";
+            countDownTimer.setText(timeLeft);
+        }
+    }
+
+    public void stopMainTimer() {
+        mainTimeLeftInMilliSeconds = 10200;
+        String timeLeft = "10s";
+        countDownTimer.setText(timeLeft);
+        mainTimerRunning = false;
+        gestureNumber++;
+
+        if (mainTimer != null) {
+            mainTimer.cancel();
         }
 
-        // Init custom list adapter
-        HandWashListAdapter detailScoresAdapter = new HandWashListAdapter(getApplicationContext(), handWashTechniqueList);
-        detailList.setAdapter(detailScoresAdapter);
+        if (gestureNumber > 6) {
+            gestureNumber = 1;
+            instructions.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+            startButton.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_SHORT).show();
 
-        // goes to more hand washing details on click
-        detailList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HandWashTechnique listItem = (HandWashTechnique) adapterView.getItemAtPosition(i);
-                String technique = listItem.getHandWashTechnique();
-                double score = listItem.getScore();
-                showDetails(technique, score);
-            }
-        });
+            // Do a http calls here and then do intent call to scores.class and then make the call
+            Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
+            startActivity(scoresIntent);
+        } else if (gestureNumber == 0) {
+            // this if statement if when the user cancels hand washing session so it should do nothing
+        } else {
+            Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
+            stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
+            startService(stopIntent);
+            remoteSensorManager.stopSensorService();
+            startStopPrepTimer();
+        }
     }
 
-    /**
-     * Shows the details of a specific hand washing technique
-     * after clicking on it in the list. Goes to new activity
-     * screen called DetailScores.
-     *
-     * @param technique name of the hand washing technique that user pressed on
-     */
-    public void showDetails(String technique, double score) {
-        Intent intent = new Intent(this, DetailedScores.class);
-        intent.putExtra(HAND_WASHING_TECHNIQUE, technique);
-        intent.putExtra(HAND_WASH_SCORE, score);
-        startActivity(intent);
-    }
 
     /**
      * Asks the user for storage permissions
@@ -192,11 +250,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Determine what the file number is for the multiple
-     * training data files.
-     * @return file number for training data file
+     * Returns file number for accelerometer data
+     * @return file number
      */
     public static int getFileNumber() {
-        return fileNumber;
+        return gestureNumber;
     }
 }

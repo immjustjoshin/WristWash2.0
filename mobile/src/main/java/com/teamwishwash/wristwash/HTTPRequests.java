@@ -9,12 +9,18 @@ import java.net.URL;
  * Created by Joshua on 11/8/2018.
  */
 
-public class pythonRequests {
-    static final String PYTHON_API_URL;
-    public static String getScore(String x, String y) {
+public class HTTPRequests {
+    private static final String BASE_URL ="https://wishwash.herokuapp.com/";
+//    private static AsyncHttpClient client = new AsynchHttpClient();
+
+    public static void preprocess(long[] data) {
+        StringBuilder result = new StringBuilder();
+
+    }
+    public static void getScore(int x, int y) {
+        StringBuilder result = new StringBuilder();
         try {
-            StringBuilder result = new StringBuilder();
-            URL url = new URL(PYTHON_API_URL + x + "," + y);
+            URL url = new URL(BASE_URL + String.valueOf(x) + "," + String.valueOf(y));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -24,10 +30,10 @@ public class pythonRequests {
                 result.append(line);
             }
             reader.close();
-            return result.toString();
+            Results.setRubbingPalmsScore(Integer.valueOf(result.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Okie?";
     }
+
 }

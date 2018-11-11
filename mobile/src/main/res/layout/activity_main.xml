@@ -7,42 +7,41 @@
     tools:context="com.teamwishwash.wristwash.MainActivity">
 
 
-    <TextView
-        android:id="@+id/totalScoreTextView"
+    <Button
+        android:id="@+id/requestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:text="@string/total_score"
-        android:textColor="@color/black"
-        android:textSize="30sp"/>
+        android:layout_above="@id/instructionsTextView"
+        android:layout_marginBottom="40dp"
+        android:layout_centerInParent="true"
+        android:text="Request" />
 
     <TextView
-        android:id="@+id/scoreTextView"
+        android:id="@+id/instructionsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/totalScoreTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:textSize="40sp"
-        android:text="@string/score" />
+        android:layout_above="@id/countDownTextView"
+        android:layout_marginBottom="45dp"
+        android:text="@string/instructions"
+        android:textSize="25sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
 
-    <ListView
-        android:id="@+id/detailsListView"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/countDownTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/scoreTextView"
-        android:paddingTop="5dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:divider="@color/transparent"
-        android:dividerHeight="7dp" />
+        android:layout_below="@id/detailsListView"
+        android:layout_marginBottom="5dp"
+        android:text="@string/default_timer"
+        android:textSize="100sp"
+        android:layout_centerInParent="true"/>
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detailsListView"
+        android:layout_below="@id/countDownTextView"
         android:layout_marginTop="25dp"
         android:orientation="horizontal"
         android:gravity="center">
@@ -51,27 +50,17 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:text="@string/start" />
 
         <Button
-            android:id="@+id/stopButton"
+            android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/stop" />
-
-        <Button
-            android:id="@+id/deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/delete" />
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:visibility="gone"
+            android:text="@string/cancel" />
     </LinearLayout>
 </RelativeLayout>
