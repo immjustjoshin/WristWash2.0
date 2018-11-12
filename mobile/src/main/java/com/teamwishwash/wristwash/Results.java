@@ -1,12 +1,19 @@
 package com.teamwishwash.wristwash;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by Joshua on 11/9/2018.
  */
 
 public class Results {
 
-    public static double scores[] = new double[6];
+    /** ArrayList that holds the 6 accelerometer data files */
+    private static ArrayList<ArrayList<ArrayList<Double>>> listOfAccelFiles = new ArrayList<>();
+
+    /** List that holds the final scores for each hand-washing gesture */
+    private static double scores[] = new double[6];
 
     // Setters
     public static void setRubbingPalmsScore(double result) {
@@ -31,6 +38,10 @@ public class Results {
 
     public static void setRubbingNailsScore2(double result) {
         scores[5] = result;
+    }
+
+    public static void setListOfAccelFiles(ArrayList<ArrayList<ArrayList<Double>>> list) {
+        listOfAccelFiles = list;
     }
 
     // Getters
@@ -58,5 +69,18 @@ public class Results {
 
         double average = (rubbingPalms + rubbingBackOfHands + rubbingFingers + rubbingNails) / 4;
         return String.valueOf(average);
+    }
+
+
+    /**
+     * Method that returns the 6 accelerometer data files
+     * that were recorded in the hand washing session. Each
+     * accel file's data is in a 2-D array format. Each of
+     * the 2-D array formatted accel files are then inside
+     * another list which contains all 6 data files.
+     * @return list of Accelerometer files of the hand-washing session
+     */
+    public static ArrayList<ArrayList<ArrayList<Double>>> getAccelFiles() {
+        return listOfAccelFiles;
     }
 }

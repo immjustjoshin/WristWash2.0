@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
                 startActivity(scoresIntent);
-//                FileUtil.segmentMotionData();
+                FileUtil.extractMotionData();
             }
         });
 
@@ -85,15 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
                 gestureNumber = 1;
                 startStopPrepTimer();
-
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        gestureNumber = 1;
-//                        startStopPrepTimer();
-//                    }
-//                },500);
             }
         });
 
@@ -221,13 +212,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (gestureNumber > 6) {
+            Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
+            stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
+            startService(stopIntent);
+            remoteSensorManager.stopSensorService();
             gestureNumber = 1;
             instructions.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
             startButton.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_SHORT).show();
 
-            // Do a http calls here and then do intent call to scores.class and then make the call
+            // Extract motion data and then do http calls here and then do intent call to scores.class
             Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
             startActivity(scoresIntent);
         } else if (gestureNumber == 0) {

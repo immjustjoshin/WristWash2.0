@@ -18,7 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * This class handles file input/output operations, such as saving the accelerometer/gyroscope
@@ -155,29 +155,37 @@ public class FileUtil {
      * to the confusion matrix through another HTTP request call that will
      * return a score for each hand washing technique.
      */
-    public static void segmentMotionData() {
+    public static void extractMotionData() {
         File motionDataDirectory = getMotionDataFile();
         File files[] = motionDataDirectory.listFiles();
-        File accelFile = files[0];
-//        List<ArrayList<Long>> data = new ArrayList();
-//        ArrayList<Long> line = new ArrayList();
-        List<ArrayList<Double>> data = new ArrayList<>();
         BufferedReader br;
+        ArrayList<ArrayList<ArrayList<Double>>> accelFilesList = new ArrayList();
 
         try {
             String line;
-            br = new BufferedReader(new FileReader(accelFile));
-            ArrayList<Double> dataLine = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                dataLine = splitCSVLine(line);
-                data.add(dataLine);
+            for (File accelFile : files) {
+                br = new BufferedReader(new FileReader(accelFile));
+                ArrayList<Double> dataLine;
+                ArrayList<ArrayList<Double>> accelDataOfOneFile = new ArrayList<>();
+                while ((line = br.readLine()) != null) {
+                    dataLine = splitCSVLine(line);
+                    accelDataOfOneFile.add(dataLine);
+                }
+                accelFilesList.add(accelDataOfOneFile);
+                br.close();
             }
-            br.close();
+            Results.setListOfAccelFiles(accelFilesList);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Splits a line in a csv file by the commas and
+     * extracts the x, y, z values.
+     * @param line csv line that is being passed in
+     * @return An array that holds the x, y, z values
+     */
     public static ArrayList<Double> splitCSVLine(String line) {
         ArrayList<Double> result = new ArrayList<>();
         if (line != null) {
