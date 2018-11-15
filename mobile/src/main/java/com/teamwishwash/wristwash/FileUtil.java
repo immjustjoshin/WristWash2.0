@@ -155,12 +155,11 @@ public class FileUtil {
      * to the confusion matrix through another HTTP request call that will
      * return a score for each hand washing technique.
      */
-    public static void extractMotionData() {
+    public static ArrayList<ArrayList<ArrayList<Double>>> extractMotionData() {
         File motionDataDirectory = getMotionDataFile();
         File files[] = motionDataDirectory.listFiles();
         BufferedReader br;
         ArrayList<ArrayList<ArrayList<Double>>> accelFilesList = new ArrayList();
-
         try {
             String line;
             for (File accelFile : files) {
@@ -174,10 +173,10 @@ public class FileUtil {
                 accelFilesList.add(accelDataOfOneFile);
                 br.close();
             }
-            Results.setListOfAccelFiles(accelFilesList);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return accelFilesList;
     }
 
     /**

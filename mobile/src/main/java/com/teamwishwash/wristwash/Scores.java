@@ -19,6 +19,7 @@ public class Scores extends AppCompatActivity {
 
     public static final String HAND_WASHING_TECHNIQUE = "hand washing technique";
     public static final String HAND_WASH_SCORE = "hand wash score";
+    public static final String FINAL_SCORES = "final scores";
 
     // layouts
     TextView score;
@@ -38,20 +39,24 @@ public class Scores extends AppCompatActivity {
         score = (TextView) findViewById(R.id.scoreTextView);
         detailList = (ListView) findViewById(R.id.detailsListView);
 
+        // gets final scores for all hand washing gestures
+        Intent intent = getIntent();
+        double[] scores = intent.getDoubleArrayExtra(Scores.FINAL_SCORES);
+        ArrayList<Double> finalScores = combineScores(scores);
 
         // Adds hand washing technique and scores to list
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", Double.valueOf(Results.getRubbingPalmsScore())));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", Double.valueOf(Results.getRubbingBackOfHandsScore())));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", Double.valueOf(Results.getRubbingFingersScore())));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", Double.valueOf(Results.getRubbingNailsScore())));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", finalScores.get(0)));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", finalScores.get(1)));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", finalScores.get(2)));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", finalScores.get(3)));
 
-        double average = Double.valueOf(Results.getTotalScore());
-        score.setText(String.valueOf(average));
-        if (average >= 0 && average < 4) {
+        double totalScore = finalScores.get(4);
+        score.setText(String.valueOf(totalScore));
+        if (totalScore >= 0 && totalScore < 4) {
             score.setTextColor(getResources().getColor(R.color.red, getTheme()));
-        } else if (average >=4 && average < 8) {
+        } else if (totalScore >=4 && totalScore < 8) {
             score.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
-        } else if (average >= 8 && average <= 10) {
+        } else if (totalScore >= 8 && totalScore <= 10) {
             score.setTextColor(getResources().getColor(R.color.green, getTheme()));
         }
 
@@ -83,6 +88,31 @@ public class Scores extends AppCompatActivity {
         intent.putExtra(HAND_WASHING_TECHNIQUE, technique);
         intent.putExtra(HAND_WASH_SCORE, score);
         startActivity(intent);
+    }
+
+    /**
+     * This method combines the 6 scores into 5 scores.
+     * It will combine the score both the rubbing the back of
+     * hands score and combine the rubbing under both nails scores.
+     * This will leave 4 scores. A fifth score will be added to indicate
+     * the total score.
+     * @param list list of scores for the 6 hand washing gestures
+     * @return list that has the scores for the 4 hand washing techniques & a total score
+     */
+    public ArrayList<Double> combineScores(double[] list) {
+        ArrayList<Double> finalScores = new ArrayList<>();
+        finalScores.add(list[0] * 10);                          // Adds rubbing palms score
+        finalScores.add(((list[1] + list[2]) / 2) * 10);        // Adds rubbing back of hands score
+        finalScores.add(list[3] * 10);                          // Adds rubbing fingers score
+        finalScores.add(((list[4] + list[5]) / 2) * 10);        // Adds rubbing under nails score
+
+        double totalScore = 0;
+        for (int i = 0; i < list.length; i++) {
+            totalScore += list[i];
+        }
+        totalScore = (totalScore / 6) * 10;
+        finalScores.add(totalScore);
+        return finalScores;
     }
 
     @Override

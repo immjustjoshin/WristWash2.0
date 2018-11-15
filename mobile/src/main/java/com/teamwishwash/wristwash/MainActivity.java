@@ -1,14 +1,28 @@
 package com.teamwishwash.wristwash;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     /** The sensor manager which handles sensors on the wearable device remotely */
     private RemoteSensorManager remoteSensorManager;
 
+    /** The url for which our server is placed at */
+    private String BASE_URL = "http://ef9bdcdd.ngrok.io/post";
+
+    /** Number for the files*/
     public static int gestureNumber = 1;
 
     // layouts
@@ -46,34 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         requestButton = (Button) findViewById(R.id.requestButton);
-
+        final Context self = this;
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
-                startActivity(scoresIntent);
-                FileUtil.extractMotionData();
+                getResults();
             }
         });
-
-//        requestButton.setOnClickListener(new View.OnClickListener() {
-//            String result = "";
-//            @Override
-//            public void onClick(View view) {
-//                Thread thread = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            HTTPRequests.getScore(2, 2);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                thread.start();
-//            }
-//        });
-
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -223,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_SHORT).show();
 
             // Extract motion data and then do http calls here and then do intent call to scores.class
+            getResults();
             Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
             startActivity(scoresIntent);
         } else if (gestureNumber == 0) {
@@ -250,5 +248,42 @@ public class MainActivity extends AppCompatActivity {
      */
     public static int getFileNumber() {
         return gestureNumber;
+    }
+
+    /**
+     * This method gets the results of the hand washing session.
+     * First it extracts the motion data from each csv file
+     * and sends it to the server for pre-processing using a
+     * HTTP call request.
+     */
+    public void getResults() {
+        ArrayList<ArrayList<ArrayList<Double>>> list = FileUtil.extractMotionData();
+
+        final Gson gson = new Gson();
+        Results res = new Results();
+        res.setListOfAccelFiles(list);
+        final Intent intent = new Intent(this, Scores.class);
+        try {
+            JSONObject json = new JSONObject(gson.toJson(res));
+            AsyncHttpClient client = new AsyncHttpClient();
+            ByteArrayEntity entity = new ByteArrayEntity(json.toString().getBytes("UTF-8"));
+            client.post(this, BASE_URL, entity, "application/json", new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Log.e("Response: ", response.toString());
+                    Results newResults = gson.fromJson(response.toString(), Results.class);
+                    intent.putExtra(Scores.FINAL_SCORES, newResults.getScores());
+                    startActivity(intent);
+                }
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
