@@ -82,7 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 instructions.setVisibility(View.VISIBLE);
 
                 gestureNumber = 1;
-                startStopPrepTimer();
+                Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
+                startIntent.setAction(Constants.ACTION.START_FOREGROUND);
+                startService(startIntent);
+                Toast.makeText(getApplicationContext(), "Collecting Data!", Toast.LENGTH_LONG).show();
+                remoteSensorManager.startSensorService();
+//                startStopPrepTimer();
             }
         });
 
@@ -90,13 +95,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gestureNumber = -1;
-                stopPrepTimer();
-                stopMainTimer();
+                Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
+                stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
+                startService(stopIntent);
+                remoteSensorManager.stopSensorService();
+//                stopPrepTimer();
+//                stopMainTimer();
                 startButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.GONE);
                 instructions.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
-                FileUtil.deleteData();
+//                FileUtil.deleteData();
             }
         });
 
@@ -170,22 +179,23 @@ public class MainActivity extends AppCompatActivity {
         startService(startIntent);
         remoteSensorManager.startSensorService();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mainTimerRunning = true;
-                mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
-                    @Override
-                    public void onTick(long l) {
-                        mainTimeLeftInMilliSeconds = l;
-                        updateMainTimer();
-                    }
-                    @Override
-                    public void onFinish() {}
-                }.start();
-            }
-        }, 600);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() { // log at write, log at timer
+//                mainTimerRunning = true;
+//                mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
+//                    @Override
+//                    public void onTick(long l) {
+//                        Log.d("TIMER", ": " + l);
+//                        mainTimeLeftInMilliSeconds = l;
+//                        updateMainTimer();
+//                    }
+//                    @Override
+//                    public void onFinish() {}
+//                }.start();
+//            }
+//        }, 600);
     }
 
     public void updateMainTimer() {

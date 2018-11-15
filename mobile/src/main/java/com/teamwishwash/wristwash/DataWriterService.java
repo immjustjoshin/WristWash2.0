@@ -61,6 +61,7 @@ public class DataWriterService extends Service{
             if (intent.getAction() != null) {
                 if (intent.getAction().equals(Constants.ACTION.SEND_ACCELEROMETER)) {
                     String line = intent.getStringExtra(Constants.VALUES.SENSOR_DATA);
+                    Log.d("LINE:", line);
                     synchronized (accelWriter) {
                         FileUtil.writeToFile(line, accelWriter);
                     }
@@ -125,7 +126,7 @@ public class DataWriterService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(Constants.ACTION.START_FOREGROUND)) {
             Log.i(TAG, "Received Start Service Intent");
-
+            Log.d("START", "" + "Writer Service");
             //open main activity when user clicks on notification
             Intent notificationIntent = new Intent(this, MainActivity.class);
             notificationIntent.setAction(Constants.ACTION.NAVIGATE_TO_APP);
