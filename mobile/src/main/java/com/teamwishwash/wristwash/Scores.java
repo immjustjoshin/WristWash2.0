@@ -2,16 +2,14 @@ package com.teamwishwash.wristwash;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class Scores extends AppCompatActivity {
         score = (TextView) findViewById(R.id.scoreTextView);
         detailList = (ListView) findViewById(R.id.detailsListView);
 
-        // gets final scores for all hand washing gestures
+        // gets final scores for all hand washing gestures from intent
         Intent intent = getIntent();
         double[] scores = intent.getDoubleArrayExtra(Scores.FINAL_SCORES);
         ArrayList<Double> finalScores = combineScores(scores);
@@ -52,9 +50,9 @@ public class Scores extends AppCompatActivity {
 
         double totalScore = finalScores.get(4);
         score.setText(String.valueOf(totalScore));
-        if (totalScore >= 0 && totalScore < 4) {
+        if (totalScore >= 0 && totalScore < 6) {
             score.setTextColor(getResources().getColor(R.color.red, getTheme()));
-        } else if (totalScore >=4 && totalScore < 8) {
+        } else if (totalScore >=6 && totalScore < 8) {
             score.setTextColor(getResources().getColor(R.color.yellow_orange, getTheme()));
         } else if (totalScore >= 8 && totalScore <= 10) {
             score.setTextColor(getResources().getColor(R.color.green, getTheme()));
@@ -83,7 +81,7 @@ public class Scores extends AppCompatActivity {
      *
      * @param technique name of the hand washing technique that user pressed on
      */
-    public void showDetails(String technique, double score) {
+    private void showDetails(String technique, double score) {
         Intent intent = new Intent(this, DetailedScores.class);
         intent.putExtra(HAND_WASHING_TECHNIQUE, technique);
         intent.putExtra(HAND_WASH_SCORE, score);
@@ -99,20 +97,60 @@ public class Scores extends AppCompatActivity {
      * @param list list of scores for the 6 hand washing gestures
      * @return list that has the scores for the 4 hand washing techniques & a total score
      */
-    public ArrayList<Double> combineScores(double[] list) {
-        ArrayList<Double> finalScores = new ArrayList<>();
-        finalScores.add(list[0] * 10);                          // Adds rubbing palms score
-        finalScores.add(((list[1] + list[2]) / 2) * 10);        // Adds rubbing back of hands score
-        finalScores.add(list[3] * 10);                          // Adds rubbing fingers score
-        finalScores.add(((list[4] + list[5]) / 2) * 10);        // Adds rubbing under nails score
+    private ArrayList<Double> combineScores(double[] list) {
+        ArrayList<Double> finalScores = new ArrayList<>();       // Score is a percentage out of 100
+        double gesture1 = list[0] * 100;                         // Rubbing palms score
+        double gesture2 = ((list[1] + list[2]) / 2) * 100;       // Rubbing back of hands core
+        double gesture3 = list[3] * 100;                         // Rubbing fingers score
+        double gesture4 = ((list[4] + list[5]) / 2) * 100;       // Rubbing under nails score
 
-        double totalScore = 0;
+        double totalScore = 0;                                   // Total Score of all gestures combined
         for (int i = 0; i < list.length; i++) {
             totalScore += list[i];
         }
-        totalScore = (totalScore / 6) * 10;
-        finalScores.add(totalScore);
+        totalScore = (totalScore / 6) * 100;
+
+        // Apply square root curve as the scoring system
+        gesture1 = applySquareRootCurve(gesture1);
+        gesture2 = applySquareRootCurve(gesture2);
+        gesture3 = applySquareRootCurve(gesture3);
+        gesture4 = applySquareRootCurve(gesture4);
+        totalScore = applySquareRootCurve(totalScore);
+
+        // Formats scores to one decimal place
+        gesture1 = formatDecimals(gesture1);
+        gesture2 = formatDecimals(gesture2);
+        gesture3 = formatDecimals(gesture3);
+        gesture4 = formatDecimals(gesture4);
+        totalScore = formatDecimals(totalScore);
+
+        finalScores.add(gesture1);        // Adds rubbing palms score
+        finalScores.add(gesture2);        // Adds rubbing back of hands score
+        finalScores.add(gesture3);        // Adds rubbing fingers score
+        finalScores.add(gesture4);        // Adds rubbing under nails score
+        finalScores.add(totalScore);      // Adds total score
         return finalScores;
+    }
+
+    /**
+     * Formats score to be out of 10 instead of 100.
+     * Also uses only 1 decimal place.
+     * @param score score to be formatted
+     * @return formatted score
+     */
+    private double formatDecimals(double score) {
+        double finalScore = score / 10;
+        DecimalFormat oneDecimal = new DecimalFormat("#.#");
+        return Double.valueOf(oneDecimal.format(finalScore));
+    }
+
+    /**
+     * Applys a square root curve
+     * @param score score to be curved
+     * @return curved score
+     */
+    private double applySquareRootCurve(double score) {
+        return Math.sqrt(score) * 10;
     }
 
     @Override

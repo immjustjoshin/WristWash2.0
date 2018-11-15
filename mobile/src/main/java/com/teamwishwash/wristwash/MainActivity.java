@@ -1,6 +1,5 @@
 package com.teamwishwash.wristwash;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -33,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://ef9bdcdd.ngrok.io/post";
+    private String BASE_URL = "http://c7943920.ngrok.io";
+
+    /** post request parameter to add after BASE_URL*/
+    private String POST_CALL = "/post";
 
     /** Number for the files*/
     public static int gestureNumber = 1;
@@ -62,15 +64,14 @@ public class MainActivity extends AppCompatActivity {
         countDownTimer = (TextView) findViewById(R.id.countDownTextView);
         instructions = (TextView) findViewById(R.id.instructionsTextView);
 
-
-        requestButton = (Button) findViewById(R.id.requestButton);
-        final Context self = this;
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getResults();
-            }
-        });
+//        // request listener. Used for testing http call to API server
+//        requestButton = (Button) findViewById(R.id.requestButton);
+//        requestButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getResults();
+//            }
+//        });
 
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void startMainTimer() {
+        // Begins collecting sensor data here
         Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
         startIntent.setAction(Constants.ACTION.START_FOREGROUND);
         startService(startIntent);
@@ -217,15 +219,15 @@ public class MainActivity extends AppCompatActivity {
             instructions.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
             startButton.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
 
-            // Extract motion data and then do http calls here and then do intent call to scores.class
             getResults();
             Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
             startActivity(scoresIntent);
         } else if (gestureNumber == 0) {
-            // this if statement if when the user cancels hand washing session so it should do nothing
+            // This if statement is when the user cancels hand washing session so it should do nothing
         } else {
+            // Stops recording sensor data here
             Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
             stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
             startService(stopIntent);
@@ -253,8 +255,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method gets the results of the hand washing session.
      * First it extracts the motion data from each csv file
-     * and sends it to the server for pre-processing using a
-     * HTTP call request.
+     * and then sends each file to the server for pre-processing
+     * using a HTTP call request. After doing all this, a score
+     * will be returned for the specific hand washing gesture.
      */
     public void getResults() {
         ArrayList<ArrayList<ArrayList<Double>>> list = FileUtil.extractMotionData();
@@ -267,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = new JSONObject(gson.toJson(res));
             AsyncHttpClient client = new AsyncHttpClient();
             ByteArrayEntity entity = new ByteArrayEntity(json.toString().getBytes("UTF-8"));
-            client.post(this, BASE_URL, entity, "application/json", new JsonHttpResponseHandler() {
+            client.post(this, BASE_URL + POST_CALL, entity, "application/json", new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
