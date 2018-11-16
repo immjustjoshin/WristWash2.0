@@ -104,24 +104,28 @@ public class Scores extends AppCompatActivity {
         double gesture3 = list[3] * 100;                         // Rubbing fingers score
         double gesture4 = ((list[4] + list[5]) / 2) * 100;       // Rubbing under nails score
 
-        double totalScore = 0;                                   // Total Score of all gestures combined
-        for (int i = 0; i < list.length; i++) {
-            totalScore += list[i];
-        }
-        totalScore = (totalScore / 6) * 100;
-
         // Apply square root curve as the scoring system
-        gesture1 = applySquareRootCurve(gesture1);
-        gesture2 = applySquareRootCurve(gesture2);
-        gesture3 = applySquareRootCurve(gesture3);
-        gesture4 = applySquareRootCurve(gesture4);
-        totalScore = applySquareRootCurve(totalScore);
+        if (gesture1 > 35) {
+            gesture1 = applySquareRootCurve(gesture1);
+        }
+        if (gesture2 > 35) {
+            gesture2 = applySquareRootCurve(gesture2);
+        }
+        if (gesture3 > 35) {
+            gesture3 = applySquareRootCurve(gesture3);
+        }
+        if (gesture4 > 35) {
+            gesture4 = applySquareRootCurve(gesture4);
+        }
 
         // Formats scores to one decimal place
-        gesture1 = formatDecimals(gesture1);
-        gesture2 = formatDecimals(gesture2);
-        gesture3 = formatDecimals(gesture3);
-        gesture4 = formatDecimals(gesture4);
+        gesture1 = formatDecimals(gesture1 / 10);
+        gesture2 = formatDecimals(gesture2 / 10);
+        gesture3 = formatDecimals(gesture3 / 10);
+        gesture4 = formatDecimals(gesture4 / 10);
+
+        // Total Score of all gestures combined
+        double totalScore = (gesture1 + gesture2 + gesture3 + gesture4) / 4;
         totalScore = formatDecimals(totalScore);
 
         finalScores.add(gesture1);        // Adds rubbing palms score
@@ -139,9 +143,8 @@ public class Scores extends AppCompatActivity {
      * @return formatted score
      */
     private double formatDecimals(double score) {
-        double finalScore = score / 10;
         DecimalFormat oneDecimal = new DecimalFormat("#.#");
-        return Double.valueOf(oneDecimal.format(finalScore));
+        return Double.valueOf(oneDecimal.format(score));
     }
 
     /**

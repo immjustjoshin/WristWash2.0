@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://20395249.ngrok.io";
+    private String BASE_URL = "http://f6d42ce4.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     // layouts
     TextView countDownTimer, instructions;
-    Button startButton, cancelButton, requestButton;
+    Button startButton, cancelButton;
 
     // Timer variables
     CountDownTimer mainTimer, prepTimer;
@@ -64,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
         countDownTimer = (TextView) findViewById(R.id.countDownTextView);
         instructions = (TextView) findViewById(R.id.instructionsTextView);
 
-//        // request listener. Used for testing http call to API server
-//        requestButton = (Button) findViewById(R.id.requestButton);
-//        requestButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getResults();
-//            }
-//        });
-
         //start listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,12 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 instructions.setVisibility(View.VISIBLE);
 
                 gestureNumber = 1;
-                Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
-                startIntent.setAction(Constants.ACTION.START_FOREGROUND);
-                startService(startIntent);
-                Toast.makeText(getApplicationContext(), "Collecting Data!", Toast.LENGTH_LONG).show();
-                remoteSensorManager.startSensorService();
-//                startStopPrepTimer();
+                Toast.makeText(getApplicationContext(), "Starting Session!", Toast.LENGTH_LONG).show();
+                startStopPrepTimer();
             }
         });
 
@@ -95,17 +82,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gestureNumber = -1;
-                Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
-                stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
-                startService(stopIntent);
-                remoteSensorManager.stopSensorService();
-//                stopPrepTimer();
-//                stopMainTimer();
+                stopDataCollection();
+                stopPrepTimer();
+                stopMainTimer();
                 startButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.GONE);
                 instructions.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
-//                FileUtil.deleteData();
+                FileUtil.deleteData();
             }
         });
 
@@ -169,33 +153,28 @@ public class MainActivity extends AppCompatActivity {
         if (mainTimerRunning) {
             stopMainTimer();
         } else {
+            startDataCollection();
             startMainTimer();
         }
     }
     public void startMainTimer() {
-        // Begins collecting sensor data here
-        Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
-        startIntent.setAction(Constants.ACTION.START_FOREGROUND);
-        startService(startIntent);
-        remoteSensorManager.startSensorService();
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() { // log at write, log at timer
-//                mainTimerRunning = true;
-//                mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
-//                    @Override
-//                    public void onTick(long l) {
-//                        Log.d("TIMER", ": " + l);
-//                        mainTimeLeftInMilliSeconds = l;
-//                        updateMainTimer();
-//                    }
-//                    @Override
-//                    public void onFinish() {}
-//                }.start();
-//            }
-//        }, 600);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() { // log at write, log at timer
+                mainTimerRunning = true;
+                mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        Log.d("TIMER", ": " + l);
+                        mainTimeLeftInMilliSeconds = l;
+                        updateMainTimer();
+                    }
+                    @Override
+                    public void onFinish() {}
+                }.start();
+            }
+        }, 1500);
     }
 
     public void updateMainTimer() {
@@ -221,27 +200,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (gestureNumber > 6) {
-            Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
-            stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
-            startService(stopIntent);
-            remoteSensorManager.stopSensorService();
+            stopDataCollection();
             gestureNumber = 1;
             instructions.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
             startButton.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
-
-            getResults();
-            Intent scoresIntent = new Intent(MainActivity.this, Scores.class);
-            startActivity(scoresIntent);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getResults();
+                }
+            }, 100);
         } else if (gestureNumber == 0) {
             // This if statement is when the user cancels hand washing session so it should do nothing
         } else {
             // Stops recording sensor data here
-            Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
-            stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
-            startService(stopIntent);
-            remoteSensorManager.stopSensorService();
+            stopDataCollection();
             startStopPrepTimer();
         }
     }
@@ -262,6 +238,20 @@ public class MainActivity extends AppCompatActivity {
         return gestureNumber;
     }
 
+    public void startDataCollection() {
+        Intent startIntent = new Intent(MainActivity.this, DataWriterService.class);
+        startIntent.setAction(Constants.ACTION.START_FOREGROUND);
+        startService(startIntent);
+        remoteSensorManager.startSensorService();
+    }
+
+    public void stopDataCollection() {
+        Intent stopIntent = new Intent(MainActivity.this, DataWriterService.class);
+        stopIntent.setAction(Constants.ACTION.STOP_FOREGROUND);
+        startService(stopIntent);
+        remoteSensorManager.stopSensorService();
+    }
+
     /**
      * This method gets the results of the hand washing session.
      * First it extracts the motion data from each csv file
@@ -271,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void getResults() {
         ArrayList<ArrayList<ArrayList<Double>>> list = FileUtil.extractMotionData();
-
+        Log.e("IM HERE: ", "I should be launching and getting the scores!");
         final Gson gson = new Gson();
         Results res = new Results();
         res.setListOfAccelFiles(list);

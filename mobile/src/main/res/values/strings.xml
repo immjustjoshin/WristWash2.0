@@ -12,6 +12,7 @@
     <string name="training_mode">Training Mode</string>
     <string name="regular_mode">Regular Mode</string>
     <string name="instructions">Next gesture in: 3s</string>
+    <string name="getScore">Get Score</string>
     <string name="goodScoreDescription">Your hand washing technique
         is great! Continue with the same techniques you are currently
         using to ensure the highest quality of cleanliness for your hands.
