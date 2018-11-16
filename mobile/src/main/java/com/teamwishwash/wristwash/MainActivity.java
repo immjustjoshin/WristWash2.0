@@ -18,6 +18,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://78769de7.ngrok.io";
+    private String BASE_URL = "http://6644d7e0.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     // layouts
     TextView countDownTimer, instructions;
-    Button startButton, cancelButton;
+    Button startButton, cancelButton, getScoreButton;
 
     // Timer variables
     CountDownTimer mainTimer, prepTimer;
@@ -61,14 +62,16 @@ public class MainActivity extends AppCompatActivity {
         // declaring screen layouts
         startButton = (Button) findViewById(R.id.startButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
+        getScoreButton = (Button) findViewById(R.id.getScoreButton);
         countDownTimer = (TextView) findViewById(R.id.countDownTextView);
         instructions = (TextView) findViewById(R.id.instructionsTextView);
 
-        //start listener
+        // Start listener
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startButton.setVisibility(View.GONE);
+                getScoreButton.setVisibility(View.GONE);
                 cancelButton.setVisibility(View.VISIBLE);
                 instructions.setVisibility(View.VISIBLE);
 
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Cancel listener
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,12 +92,38 @@ public class MainActivity extends AppCompatActivity {
                 startButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.GONE);
                 instructions.setVisibility(View.GONE);
+                getScoreButton.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
-                FileUtil.deleteData();
+                Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileUtil.deleteData();
+                    }
+                });
+            }
+        });
+
+        // Get Score listener
+        getScoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Getting Most Recent Score!", Toast.LENGTH_LONG).show();
+                getResults();
             }
         });
 
         verifyPermissions();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (hasMotionDataFiles()) {
+            getScoreButton.setVisibility(View.VISIBLE);
+        } else {
+            getScoreButton.setVisibility(View.GONE);
+        }
     }
 
     public void startStopPrepTimer() {
@@ -212,13 +242,12 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     getResults();
                 }
-            }, 100);
-        } else if (gestureNumber == 0) {
-            // This if statement is when the user cancels hand washing session so it should do nothing
-        } else {
-            // Stops recording sensor data here
+            }, 50);
+        } else if (gestureNumber > 0 && gestureNumber <= 6) {
             stopDataCollection();
             startStopPrepTimer();
+        } else {
+            Log.e("HAND WASHING SESSION: ", "CANCELING");
         }
     }
 
@@ -261,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void getResults() {
         ArrayList<ArrayList<ArrayList<Double>>> list = FileUtil.extractMotionData();
-        Log.e("IM HERE: ", "I should be launching and getting the scores!");
         final Gson gson = new Gson();
         Results res = new Results();
         res.setListOfAccelFiles(list);
@@ -279,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    Log.e("Response: ", response.toString());
                     Results newResults = gson.fromJson(response.toString(), Results.class);
                     intent.putExtra(Scores.FINAL_SCORES, newResults.getScores());
                     startActivity(intent);
@@ -288,5 +315,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public boolean hasMotionDataFiles() {
+        // Checks whether there are 6 files in motion-data directory to even show most recent score
+        File motionDataDirectory = FileUtil.getMotionDataFile();
+        return motionDataDirectory.listFiles().length == 6;
     }
 }

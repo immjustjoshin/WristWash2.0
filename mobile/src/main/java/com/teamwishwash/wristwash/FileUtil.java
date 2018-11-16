@@ -86,7 +86,6 @@ public class FileUtil {
     public static BufferedWriter getFileWriter(String filename, int fileNumber) {
         File rootDir = getMotionDataFile();
         String fullFileName = filename + fileNumber + CSV_EXTENSION;
-
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(new File(rootDir, fullFileName)));
@@ -123,7 +122,7 @@ public class FileUtil {
     }
 
     /**
-     * Deletes all the data from the log directory
+     * Deletes all the data from the motion-data directory
      * @return true if successfully deleted
      */
     public static boolean deleteData() {
@@ -136,7 +135,7 @@ public class FileUtil {
             if (files != null) {
                 for (File file : files) {
                     if (!file.delete()) {
-                        Log.d(TAG, "Deleting file failed: " + file.getName());
+                        Log.e(TAG, "Deleting file failed: " + file.getName());
                     }
                 }
             }
