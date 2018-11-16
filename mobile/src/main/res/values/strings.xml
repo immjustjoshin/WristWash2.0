@@ -13,19 +13,6 @@
     <string name="regular_mode">Regular Mode</string>
     <string name="instructions">Next gesture in: 3s</string>
     <string name="getScore">Get Score</string>
-    <string name="goodScoreDescription">Your hand washing technique
-        is great! Continue with the same techniques you are currently
-        using to ensure the highest quality of cleanliness for your hands.
-        Great job! :D</string>
-    <string name="badScoreDescription">Your hands are not receiving
-        the optimal cleanliness that they need. Please look over your
-        hand washing techniques in order to improve your hand washing score.
-        If you need guidance on performing the best hand washing techniques,
-        please refer to CDC video on how to properly wash your hands. </string>
-    <string name="averageDescription">Your hand washing technique
-        can be improved. Please be sure that both back sides of your
-        hands, fingers, and nails are properly washed. Be sure to
-        scrub the entire sides of your fingers and all of your nails
-        including the thumb. </string>
+    <string name="baseDescription">If you want to improve your score try:</string>
     <string name="title_activity_scores">Scores</string>
 </resources>
