@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://6644d7e0.ngrok.io";
+    private String BASE_URL = "http://dcbe97a8.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -243,11 +243,11 @@ public class MainActivity extends AppCompatActivity {
                     getResults();
                 }
             }, 50);
-        } else if (gestureNumber > 0 && gestureNumber <= 6) {
+        } else if (gestureNumber == 0) {
+            // This if statement is when the user cancels hand washing session so it should do nothing
+        } else {
             stopDataCollection();
             startStopPrepTimer();
-        } else {
-            Log.e("HAND WASHING SESSION: ", "CANCELING");
         }
     }
 
