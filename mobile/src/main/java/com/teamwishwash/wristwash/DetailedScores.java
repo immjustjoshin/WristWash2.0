@@ -5,35 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailedScores extends AppCompatActivity {
 
-    private final String rubbingText = "If you want to improve your score, try:\n"
-            + "- Rubbing your hands together more firmly\n"
-            + "- Rubbing the entire palm of your hands\n\n"
-            + "Additionally: \n"
-            + "- Rubbing your hands so that your palms are perpendicular to the ground";
-
-    private final String backHandText = "If you want to improve your score, try:\n"
-            + "- Washing the whole back of your hand\n\n"
-            + "Additionally: \n"
-            + "- Washing the back of your left hand first\n"
-            + "- Limiting the movement of the hand being washed\n"
-            + "- Not to hit the watch while washing rubbing your left hand";
-
-    private final String betweenFingerText = "If you want to improve your score, try:\n"
-            + "- Rubbing the full length of your fingers\n\n"
-            + "Additionally: \n"
-            + "- Moving both your hands while rubbing between the fingers";
-
-    private final String underNailsText = "If you want to improve your score, try:\n"
-            + "- Rubbing under your nails consistently even if it tickles\n\n"
-            + "Additionally: \n"
-            + "- Washing under the nails of your right hand first\n"
-            + "- Limiting the movement of the hand being washed\n"
-            + "- Washing your hands so that your palms are perpendicular to the ground";
-
+    // layouts
+    TextView handWashingTechnique, handWashScore, description;
+    ImageView gestureImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,35 +25,58 @@ public class DetailedScores extends AppCompatActivity {
 
         // gets name of hand washing technique and score that was clicked on
         Intent intent = getIntent();
-        String techniqueTitle = intent.getStringExtra(Scores.HAND_WASHING_TECHNIQUE);
-        double scoreValue = intent.getDoubleExtra(Scores.HAND_WASH_SCORE, 0.0);
+        String techniqueTitle = intent.getStringExtra(Constants.VALUES.HAND_WASHING_TECHNIQUE);
+        double scoreValue = intent.getDoubleExtra(Constants.VALUES.HAND_WASH_SCORE, 0.0);
 
         // initializes TextView layouts
-        TextView handWashingTechnique = (TextView) findViewById(R.id.handWashTechniqueTextView);
-        TextView handWashScore = (TextView) findViewById(R.id.detailScoreTextView);
-        TextView description = (TextView) findViewById(R.id.descriptionTextView);
+        handWashingTechnique = (TextView) findViewById(R.id.handWashTechniqueTextView);
+        handWashScore = (TextView) findViewById(R.id.detailScoreTextView);
+        description = (TextView) findViewById(R.id.descriptionTextView);
+        gestureImage = (ImageView) findViewById(R.id.detailGestureImageView);
 
+        // Sets name of hand washing technique selected
         handWashingTechnique.setText(techniqueTitle);
-        if (techniqueTitle.equals("Rubbing Palms")) {
-            Log.e("BEFORE I SET THE TEXT1", "");
-            description.setText(rubbingText);
-            Log.e("AFTER I SET THE TEXT1", "");
-        } else if (techniqueTitle.equals("Rubbing Back of Hands")) {
-            Log.e("BEFORE I SET THE TEXT2", "");
-            description.setText(backHandText);
-            Log.e("AFTER I SET THE TEXT2", "");
-        } else if (techniqueTitle.equals("Rubbing Between Fingers")) {
-            Log.e("BEFORE I SET THE TEXT3", "");
-            description.setText(betweenFingerText);
-            Log.e("AFTER I SET THE TEXT3", "");
-        } else if (techniqueTitle.equals("Rubbing Under Nails")) {
-            Log.e("BEFORE I SET THE TEXT4", "");
-            description.setText(underNailsText);
-            Log.e("AFTER I SET THE TEXT4", "");
-        } else {
-            String message = "Whoops! Something went wrong in the code!";
-            description.setText(message);
+
+        // Assigns appropriate description & image for hand washing technique selected
+        switch (techniqueTitle) {
+            case "Rubbing Palms":
+                description.setText(Constants.DESCRIPTION.rubbingText);
+                gestureImage.setImageResource(R.drawable.gesture1);
+                break;
+            case "Rubbing Back of Hands":
+                description.setText(Constants.DESCRIPTION.backHandText);
+                gestureImage.setImageResource(R.drawable.gesture2);
+                break;
+            case "Rubbing Between Fingers":
+                description.setText(Constants.DESCRIPTION.betweenFingerText);
+                gestureImage.setImageResource(R.drawable.gesture4);
+                break;
+            case "Rubbing Under Nails":
+                description.setText(Constants.DESCRIPTION.underNailsText);
+                gestureImage.setImageResource(R.drawable.gesture5);
+                break;
+            default:
+                String message = "Whoops! Something went wrong in the code!";
+                description.setText(message);
+                gestureImage.setVisibility(View.GONE);
         }
+//        if (techniqueTitle.equals("Rubbing Palms")) {
+//            description.setText(Constants.DESCRIPTION.rubbingText);
+//            gestureImage.setImageResource(R.drawable.gesture_1_image);
+//        } else if (techniqueTitle.equals("Rubbing Back of Hands")) {
+//            description.setText(Constants.DESCRIPTION.backHandText);
+//            gestureImage.setImageResource(R.drawable.gesture_2_image);
+//        } else if (techniqueTitle.equals("Rubbing Between Fingers")) {
+//            description.setText(Constants.DESCRIPTION.betweenFingerText);
+//            gestureImage.setImageResource(R.drawable.gesture_4_image);
+//        } else if (techniqueTitle.equals("Rubbing Under Nails")) {
+//            description.setText(Constants.DESCRIPTION.underNailsText);
+//            gestureImage.setImageResource(R.drawable.gesture_image_5);
+//        } else {
+//            String message = "Whoops! Something went wrong in the code!";
+//            description.setText(message);
+//            gestureImage.setVisibility(View.GONE);
+//        }
 
         //sets color of score
         handWashScore.setText(String.valueOf(scoreValue));

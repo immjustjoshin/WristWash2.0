@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/handWashTechniqueTextView"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/total_score"
         android:textColor="@color/black"
         android:textSize="25sp"/>
@@ -38,12 +38,23 @@
         android:text="@string/score"
         android:textSize="40sp"/>
 
+    <ImageView
+        android:id="@+id/detailGestureImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detailScoreTextView"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="25dp"
+        android:contentDescription="@string/hand_washing_technique"
+        app:srcCompat="@drawable/gesture1" />
+
     <TextView
         android:id="@+id/descriptionTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/detailScoreTextView"
-        android:layout_marginTop="75dp"
+        android:layout_below="@+id/detailGestureImageView"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"

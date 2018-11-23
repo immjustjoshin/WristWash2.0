@@ -36,7 +36,8 @@
         </service>
         <service android:name=".DataWriterService" />
 
-        <activity android:name=".Scores"></activity>
+        <activity android:name=".Scores" />
+        <activity android:name=".Tutorial"></activity>
     </application>
 
 </manifest>

@@ -6,8 +6,12 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://dcbe97a8.ngrok.io";
+    private String BASE_URL = "http://f6aa256c.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     // layouts
     TextView countDownTimer, instructions;
     Button startButton, cancelButton, getScoreButton;
+    ImageView gestureImage;
 
     // Timer variables
     CountDownTimer mainTimer, prepTimer;
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         getScoreButton = (Button) findViewById(R.id.getScoreButton);
         countDownTimer = (TextView) findViewById(R.id.countDownTextView);
         instructions = (TextView) findViewById(R.id.instructionsTextView);
+        gestureImage = (ImageView) findViewById(R.id.gestureImageView);
 
         // Start listener
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 getScoreButton.setVisibility(View.GONE);
                 cancelButton.setVisibility(View.VISIBLE);
                 instructions.setVisibility(View.VISIBLE);
+                gestureImage.setVisibility(View.VISIBLE);
 
                 gestureNumber = 1;
                 Toast.makeText(getApplicationContext(), "Starting Session!", Toast.LENGTH_LONG).show();
@@ -93,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 cancelButton.setVisibility(View.GONE);
                 instructions.setVisibility(View.GONE);
                 getScoreButton.setVisibility(View.GONE);
+                gestureImage.setVisibility(View.GONE);
+                gestureImage.setImageResource(R.drawable.gesture1);
                 Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
                 Handler handler = new Handler();
                 handler.post(new Runnable() {
@@ -126,6 +135,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.help_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.helpItem:
+                //goes to another screen that describes how to wash your hands
+                Intent tutorialIntent = new Intent(this, Tutorial.class);
+                startActivity(tutorialIntent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
     public void startStopPrepTimer() {
         if (prepTimerRunning) {
             stopPrepTimer();
@@ -152,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFinish() {}
                 }.start();
             }
-        }, 400);
+        }, 700);
     }
 
     public void updatePrepTimer() {
@@ -191,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
-            public void run() { // log at write, log at timer
+            public void run() {
                 mainTimerRunning = true;
                 mainTimer = new CountDownTimer(mainTimeLeftInMilliSeconds, 1000) {
                     @Override
@@ -203,8 +232,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFinish() {}
                 }.start();
-            }
-        }, 1500);
+            }   // Adds a 1.6 sec delay to give time for the motion sensors to begin collecting data
+        }, 1600);
     }
 
     public void updateMainTimer() {
@@ -234,7 +263,9 @@ public class MainActivity extends AppCompatActivity {
             gestureNumber = 1;
             instructions.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
+            gestureImage.setVisibility(View.GONE);
             startButton.setVisibility(View.VISIBLE);
+            gestureImage.setImageResource(R.drawable.gesture1);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -247,6 +278,27 @@ public class MainActivity extends AppCompatActivity {
             // This if statement is when the user cancels hand washing session so it should do nothing
         } else {
             stopDataCollection();
+
+            // Sets the different images for each hand washing gesture during the session
+            switch (gestureNumber) {
+                case 2:
+                    gestureImage.setImageResource(R.drawable.gesture2);
+                    break;
+                case 3:
+                    gestureImage.setImageResource(R.drawable.gesture3);
+                    break;
+                case 4:
+                    gestureImage.setImageResource(R.drawable.gesture4);
+                    break;
+                case 5:
+                    gestureImage.setImageResource(R.drawable.gesture5);
+                    break;
+                case 6:
+                    gestureImage.setImageResource(R.drawable.gesture6);
+                    break;
+                default:
+                    gestureImage.setImageResource(R.drawable.gesture1);
+            }
             startStopPrepTimer();
         }
     }
@@ -308,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     Results newResults = gson.fromJson(response.toString(), Results.class);
-                    intent.putExtra(Scores.FINAL_SCORES, newResults.getScores());
+                    intent.putExtra(Constants.VALUES.FINAL_SCORES, newResults.getScores());
                     startActivity(intent);
                 }
             });

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.teamwishwash.wristwash.DetailedScores">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/helpMainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:text="@string/hand_washing_steps" />
+
+            <TextView
+                android:id="@+id/helpTitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_1" />
+
+            <ImageView
+                android:id="@+id/helpImage1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_1_description"
+                app:srcCompat="@drawable/gesture1" />
+
+            <TextView
+                android:id="@+id/helpDescription1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_1_description" />
+
+            <TextView
+                android:id="@+id/helpTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_2" />
+
+            <ImageView
+                android:id="@+id/helpImage2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_2_description"
+                app:srcCompat="@drawable/gesture2" />
+
+            <TextView
+                android:id="@+id/helpDescription2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_2_description" />
+
+            <TextView
+                android:id="@+id/helpTitle3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_3" />
+
+            <ImageView
+                android:id="@+id/helpImage3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_3_description"
+                app:srcCompat="@drawable/gesture3" />
+
+            <TextView
+                android:id="@+id/helpDescription3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_3_description" />
+
+            <TextView
+                android:id="@+id/helpTitle4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_4" />
+
+            <ImageView
+                android:id="@+id/helpImage4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_4_description"
+                app:srcCompat="@drawable/gesture4" />
+
+            <TextView
+                android:id="@+id/helpDescription4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_4_description" />
+
+            <TextView
+                android:id="@+id/helpTitle5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_5" />
+
+            <ImageView
+                android:id="@+id/helpImage5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_5_description"
+                app:srcCompat="@drawable/gesture5" />
+
+            <TextView
+                android:id="@+id/helpDescription5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_5_description" />
+
+            <TextView
+                android:id="@+id/helpTitle6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text="@string/step_6" />
+
+            <ImageView
+                android:id="@+id/helpImage6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/step_6_description"
+                app:srcCompat="@drawable/gesture6" />
+
+            <TextView
+                android:id="@+id/helpDescription6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="@string/step_6_description" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -15,4 +15,20 @@
     <string name="getScore">Get Most Recent Score</string>
     <string name="baseDescription">If you want to improve your score try:</string>
     <string name="title_activity_scores">Scores</string>
+    <string name="help">Help</string>
+    <string name="hand_washing_steps">Hand Washing Steps</string>
+    <string name="step_1">Step 1</string>
+    <string name="step_2">Step 2</string>
+    <string name="step_3">Step 3</string>
+    <string name="step_4">Step 4</string>
+    <string name="step_5">Step 5</string>
+    <string name="step_6">Step 6</string>
+    <string name="step_1_description">Rub palms together</string>
+    <string name="step_2_description">With your right hand, rub back of your left hand</string>
+    <string name="step_3_description">With your left hand, rub back of your right hand</string>
+    <string name="step_4_description">Rub in between your fingers</string>
+    <string name="step_5_description">Rub under your right nails against the palm of your left hand</string>
+    <string name="step_6_description">Rub under your left nails against the palm of your right hand</string>
+
+
 </resources>

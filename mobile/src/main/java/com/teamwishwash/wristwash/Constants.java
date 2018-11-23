@@ -26,6 +26,37 @@ public class Constants {
     public interface VALUES {
         String SENSOR_DATA = "com.teamwishwash.wristwash.values.sensor-data";
         String LABEL = "com.teamwishwash.wristwash.values.label";
+        String HAND_WASHING_TECHNIQUE = "hand washing technique";
+        String HAND_WASH_SCORE = "hand wash score";
+        String FINAL_SCORES = "final scores";
+
+    }
+
+    public interface DESCRIPTION {
+        String rubbingText = "If you want to improve your score, try:\n"
+                + "- Rubbing your hands together more firmly\n"
+                + "- Rubbing the entire palm of your hands\n\n"
+                + "Additionally: \n"
+                + "- Rubbing your hands so that your palms are perpendicular to the ground";
+
+        String backHandText = "If you want to improve your score, try:\n"
+                + "- Washing the whole back of your hand\n\n"
+                + "Additionally: \n"
+                + "- Washing the back of your left hand first\n"
+                + "- Limiting the movement of the hand being washed\n"
+                + "- Not to hit the watch while washing rubbing your left hand";
+
+        String betweenFingerText = "If you want to improve your score, try:\n"
+                + "- Rubbing the full length of your fingers\n\n"
+                + "Additionally: \n"
+                + "- Moving both your hands while rubbing between the fingers";
+
+        String underNailsText = "If you want to improve your score, try:\n"
+                + "- Rubbing under your nails consistently even if it tickles\n\n"
+                + "Additionally: \n"
+                + "- Washing under the nails of your right hand first\n"
+                + "- Limiting the movement of the hand being washed\n"
+                + "- Washing your hands so that your palms are perpendicular to the ground";
     }
 
     public interface NOTIFICATION_ID {
