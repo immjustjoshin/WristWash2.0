@@ -60,23 +60,6 @@ public class DetailedScores extends AppCompatActivity {
                 description.setText(message);
                 gestureImage.setVisibility(View.GONE);
         }
-//        if (techniqueTitle.equals("Rubbing Palms")) {
-//            description.setText(Constants.DESCRIPTION.rubbingText);
-//            gestureImage.setImageResource(R.drawable.gesture_1_image);
-//        } else if (techniqueTitle.equals("Rubbing Back of Hands")) {
-//            description.setText(Constants.DESCRIPTION.backHandText);
-//            gestureImage.setImageResource(R.drawable.gesture_2_image);
-//        } else if (techniqueTitle.equals("Rubbing Between Fingers")) {
-//            description.setText(Constants.DESCRIPTION.betweenFingerText);
-//            gestureImage.setImageResource(R.drawable.gesture_4_image);
-//        } else if (techniqueTitle.equals("Rubbing Under Nails")) {
-//            description.setText(Constants.DESCRIPTION.underNailsText);
-//            gestureImage.setImageResource(R.drawable.gesture_image_5);
-//        } else {
-//            String message = "Whoops! Something went wrong in the code!";
-//            description.setText(message);
-//            gestureImage.setVisibility(View.GONE);
-//        }
 
         //sets color of score
         handWashScore.setText(String.valueOf(scoreValue));

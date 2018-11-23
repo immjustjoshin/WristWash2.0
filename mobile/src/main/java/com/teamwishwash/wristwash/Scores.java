@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class Scores extends AppCompatActivity {
         double[] scores = intent.getDoubleArrayExtra(Constants.VALUES.FINAL_SCORES);
         Results res = new Results();
         res.setScores(scores);
-//        ArrayList<Double> finalScores = combineScores(scores);
 
         // Adds hand washing technique and scores to list
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", res.getRubbingPalmsScore()));
@@ -87,74 +85,6 @@ public class Scores extends AppCompatActivity {
         intent.putExtra(Constants.VALUES.HAND_WASH_SCORE, score);
         startActivity(intent);
     }
-
-//    /**
-//     * This method combines the 6 scores into 5 scores.
-//     * It will combine the score both the rubbing the back of
-//     * hands score and combine the rubbing under both nails scores.
-//     * This will leave 4 scores. A fifth score will be added to indicate
-//     * the total score.
-//     * @param list list of scores for the 6 hand washing gestures
-//     * @return list that has the scores for the 4 hand washing techniques & a total score
-//     */
-//    private ArrayList<Double> combineScores(double[] list) {
-//        ArrayList<Double> finalScores = new ArrayList<>();       // Score is a percentage out of 100
-//        double gesture1 = list[0] * 100;                         // Rubbing palms score
-//        double gesture2 = ((list[1] + list[2]) / 2) * 100;       // Rubbing back of hands core
-//        double gesture3 = list[3] * 100;                         // Rubbing fingers score
-//        double gesture4 = ((list[4] + list[5]) / 2) * 100;       // Rubbing under nails score
-//
-//        // Apply square root curve as the scoring system
-//        if (gesture1 > 35) {
-//            gesture1 = applySquareRootCurve(gesture1);
-//        }
-//        if (gesture2 > 35) {
-//            gesture2 = applySquareRootCurve(gesture2);
-//        }
-//        if (gesture3 > 35) {
-//            gesture3 = applySquareRootCurve(gesture3);
-//        }
-//        if (gesture4 > 35) {
-//            gesture4 = applySquareRootCurve(gesture4);
-//        }
-//
-//        // Formats scores to one decimal place
-//        gesture1 = formatDecimals(gesture1 / 10);
-//        gesture2 = formatDecimals(gesture2 / 10);
-//        gesture3 = formatDecimals(gesture3 / 10);
-//        gesture4 = formatDecimals(gesture4 / 10);
-//
-//        // Total Score of all gestures combined
-//        double totalScore = (gesture1 + gesture2 + gesture3 + gesture4) / 4;
-//        totalScore = formatDecimals(totalScore);
-//
-//        finalScores.add(gesture1);        // Adds rubbing palms score
-//        finalScores.add(gesture2);        // Adds rubbing back of hands score
-//        finalScores.add(gesture3);        // Adds rubbing fingers score
-//        finalScores.add(gesture4);        // Adds rubbing under nails score
-//        finalScores.add(totalScore);      // Adds total score
-//        return finalScores;
-//    }
-//
-//    /**
-//     * Formats score to be out of 10 instead of 100.
-//     * Also uses only 1 decimal place.
-//     * @param score score to be formatted
-//     * @return formatted score
-//     */
-//    private double formatDecimals(double score) {
-//        DecimalFormat oneDecimal = new DecimalFormat("#.#");
-//        return Double.valueOf(oneDecimal.format(score));
-//    }
-//
-//    /**
-//     * Applys a square root curve
-//     * @param score score to be curved
-//     * @return curved score
-//     */
-//    private double applySquareRootCurve(double score) {
-//        return Math.sqrt(score) * 10;
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
