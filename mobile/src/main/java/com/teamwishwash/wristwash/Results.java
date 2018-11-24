@@ -17,7 +17,7 @@ public class Results implements Serializable {
     private double scores[] = new double[6];
 
     /** List that holds the final scores after combining and curving scores for each hand-washing gesture*/
-    private ArrayList<Double> finalScores = new ArrayList<>();
+    private double[] finalScores = new double[5];
 
     // Sets all the files and scores
     /**
@@ -44,6 +44,16 @@ public class Results implements Serializable {
         this.scores = scores;
         combineScores();
     }
+
+    public double[] getFinalScores() {
+        return finalScores;
+    }
+
+    public void setFinalScores(double[] finalScores) {
+        this.finalScores = finalScores;
+    }
+
+
 
     /**
      * This method combines the 6 scores into 5 scores.
@@ -84,11 +94,11 @@ public class Results implements Serializable {
         double totalScore = (gesture1 + gesture2 + gesture3 + gesture4) / 4;
         totalScore = formatDecimals(totalScore);
 
-        finalScores.add(gesture1);        // Adds rubbing palms score
-        finalScores.add(gesture2);        // Adds rubbing back of hands score
-        finalScores.add(gesture3);        // Adds rubbing fingers score
-        finalScores.add(gesture4);        // Adds rubbing under nails score
-        finalScores.add(totalScore);      // Adds total score
+        finalScores[0] = gesture1;        // Adds rubbing palms score
+        finalScores[1] = gesture2;        // Adds rubbing back of hands score
+        finalScores[2] = gesture3;        // Adds rubbing fingers score
+        finalScores[3] = gesture4;        // Adds rubbing under nails score
+        finalScores[4] = totalScore;      // Adds total score
     }
 
     /**
@@ -97,7 +107,7 @@ public class Results implements Serializable {
      * @param score score to be formatted
      * @return formatted score
      */
-    private double formatDecimals(double score) {
+    public static double formatDecimals(double score) {
         DecimalFormat oneDecimal = new DecimalFormat("#.#");
         return Double.valueOf(oneDecimal.format(score));
     }
@@ -114,22 +124,22 @@ public class Results implements Serializable {
 
     // Getters
     public double getRubbingPalmsScore() {
-        return finalScores.get(0);
+        return finalScores[0];
     }
 
     public double getRubbingBackOfHandsScore() {
-        return finalScores.get(1);
+        return finalScores[1];
     }
 
     public double getRubbingFingersScore() {
-        return finalScores.get(2);
+        return finalScores[2];
     }
 
     public double getRubbingNailsScore() {
-        return finalScores.get(3);
+        return finalScores[3];
     }
 
     public double getTotalScore() {
-        return finalScores.get(4);
+        return finalScores[4];
     }
 }

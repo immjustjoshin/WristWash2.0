@@ -1,6 +1,7 @@
 package com.teamwishwash.wristwash;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.teamwishwash.shared.SharedConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,10 @@ public class Scores extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
 
+        /** SharedPreferences set up. Used for saving recent scores and for watch to access those scores */
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(SharedConstants.VALUES.SCORE_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
         // Add back button to navigation bar
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -32,22 +39,51 @@ public class Scores extends AppCompatActivity {
         score = (TextView) findViewById(R.id.scoreTextView);
         detailList = (ListView) findViewById(R.id.detailsListView);
 
-        // gets final scores for all hand washing gestures from intent
+        // Score placeholders
+        double palmScore, backScore, fingerScore, nailScore, totalScore;
+
+        // Intent related
         Intent intent = getIntent();
-        double[] scores = intent.getDoubleArrayExtra(Constants.VALUES.FINAL_SCORES);
         Results res = new Results();
-        res.setScores(scores);
+
+
+        if (pref.getBoolean("Session", false)) {
+            // gets final scores for all hand washing gestures from session
+            intent = getIntent();
+            double[] scores = intent.getDoubleArrayExtra(Constants.VALUES.FINAL_SCORES);
+            res.setScores(scores);
+
+            palmScore = res.getRubbingPalmsScore();
+            backScore = res.getRubbingBackOfHandsScore();
+            fingerScore = res.getRubbingFingersScore();
+            nailScore = res.getRubbingNailsScore();
+            totalScore = res.getTotalScore();
+
+            // Saves final scores in SharedPreferences for watch to retrieve
+            editor.putFloat("Palms", (float) palmScore);
+            editor.putFloat("Back", (float) backScore);
+            editor.putFloat("Fingers", (float) fingerScore);
+            editor.putFloat("Nails", (float) nailScore);
+            editor.putFloat("Total", (float) totalScore);
+            editor.apply();
+        } else {
+            // Goes here if get most recent score was pressed
+            palmScore = Results.formatDecimals(pref.getFloat("Palms", 0));
+            backScore = Results.formatDecimals(pref.getFloat("Back", 0));
+            fingerScore = Results.formatDecimals(pref.getFloat("Fingers", 0));
+            nailScore = Results.formatDecimals(pref.getFloat("Nails", 0));
+            totalScore = Results.formatDecimals(pref.getFloat("Total", 0));
+        }
 
         // Adds hand washing technique and scores to list
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", res.getRubbingPalmsScore()));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", res.getRubbingBackOfHandsScore()));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", res.getRubbingFingersScore()));
-        handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", res.getRubbingNailsScore()));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", palmScore));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Back of Hands", backScore));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Between Fingers", fingerScore));
+        handWashTechniqueList.add(new HandWashTechnique("Rubbing Under Nails", nailScore));
 
-        double totalScore = res.getTotalScore();
         score.setText(String.valueOf(totalScore));
 
-        // Sets color of score
+        // Sets color of score based on performance
         if (totalScore >= 0 && totalScore < 6) {
             score.setTextColor(getResources().getColor(R.color.red, getTheme()));
         } else if (totalScore >=6 && totalScore < 8) {
@@ -56,7 +92,7 @@ public class Scores extends AppCompatActivity {
             score.setTextColor(getResources().getColor(R.color.green, getTheme()));
         }
 
-        // Init custom list adapter
+        // Inits & sets custom list adapter
         HandWashListAdapter detailScoresAdapter = new HandWashListAdapter(getApplicationContext(), handWashTechniqueList);
         detailList.setAdapter(detailScoresAdapter);
 

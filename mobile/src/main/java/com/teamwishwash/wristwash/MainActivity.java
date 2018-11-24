@@ -1,6 +1,7 @@
 package com.teamwishwash.wristwash;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.teamwishwash.shared.SharedConstants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://f6aa256c.ngrok.io";
+    private String BASE_URL = "http://d0617634.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -64,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         remoteSensorManager = RemoteSensorManager.getInstance(this);
 
+        // SharedPreferences SetUp
+        final SharedPreferences pref = getSharedPreferences(SharedConstants.VALUES.SCORE_KEY, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
         // declaring screen layouts
         startButton = (Button) findViewById(R.id.startButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -81,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 cancelButton.setVisibility(View.VISIBLE);
                 instructions.setVisibility(View.VISIBLE);
                 gestureImage.setVisibility(View.VISIBLE);
+
+                // Determines whether it is running a session or just getting recent scores
+                editor.putBoolean("Session", true);
+                editor.apply();
 
                 gestureNumber = 1;
                 Toast.makeText(getApplicationContext(), "Starting Session!", Toast.LENGTH_LONG).show();
@@ -117,8 +126,20 @@ public class MainActivity extends AppCompatActivity {
         getScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Getting Most Recent Score!", Toast.LENGTH_LONG).show();
-                getResults();
+                // Determines whether it is running a session or just getting recent scores
+                editor.putBoolean("Session", false);
+                editor.apply();
+
+                // Gets recent scores that was saved
+                double[] scores = new double[5];
+                scores[0] = pref.getFloat("Palms", 0);
+                scores[1] = pref.getFloat("Back", 0);
+                scores[2] = pref.getFloat("Fingers", 0);
+                scores[3] = pref.getFloat("Nails", 0);
+                scores[4] = pref.getFloat("Total", 0);
+                Intent scoresIntent = new Intent(getApplicationContext(), Scores.class);
+                scoresIntent.putExtra(Constants.VALUES.RECENT_SCORES, scores);
+                startActivity(scoresIntent);
             }
         });
 
@@ -268,12 +289,12 @@ public class MainActivity extends AppCompatActivity {
             gestureImage.setImageResource(R.drawable.gesture1);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     getResults();
                 }
-            }, 50);
+            });
         } else if (gestureNumber == 0) {
             // This if statement is when the user cancels hand washing session so it should do nothing
         } else {
@@ -345,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
         final Gson gson = new Gson();
         Results res = new Results();
         res.setListOfAccelFiles(list);
-        final Intent intent = new Intent(this, Scores.class);
+        final Intent scoresIntent = new Intent(this, Scores.class);
         try {
             JSONObject json = new JSONObject(gson.toJson(res));
             AsyncHttpClient client = new AsyncHttpClient();
@@ -360,8 +381,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     Results newResults = gson.fromJson(response.toString(), Results.class);
-                    intent.putExtra(Constants.VALUES.FINAL_SCORES, newResults.getScores());
-                    startActivity(intent);
+                    scoresIntent.putExtra(Constants.VALUES.FINAL_SCORES, newResults.getScores());
+                    startActivity(scoresIntent);
                 }
             });
         } catch (Exception e){

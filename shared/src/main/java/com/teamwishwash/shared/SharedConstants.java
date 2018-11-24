@@ -27,10 +27,12 @@ public class SharedConstants {
         String LABEL_TIMESTAMP = "com.teamwishwash.shared.values.label-timestamp";
         String ACTIVITY = "com.teamwishwash.shared.values.activity";
         String COMMAND = "com.teamwishwash.shared.values.command";
+        String SCORE_KEY = "score call";
     }
 
     public interface COMMANDS {
         String START_SENSOR_SERVICE = "com.teamwishwash.shared.commands.start-sensor-service";
         String STOP_SENSOR_SERVICE = "com.teamwishwash.shared.commands.stop-sensor-service";
+        String SHOW_SCORE = "com.teamwishwash.shared.commands.show-score";
     }
 }

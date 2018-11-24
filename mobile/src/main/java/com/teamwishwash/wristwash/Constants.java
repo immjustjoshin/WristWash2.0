@@ -29,7 +29,7 @@ public class Constants {
         String HAND_WASHING_TECHNIQUE = "hand washing technique";
         String HAND_WASH_SCORE = "hand wash score";
         String FINAL_SCORES = "final scores";
-
+        String RECENT_SCORES = "recent scores";
     }
 
     public interface DESCRIPTION {

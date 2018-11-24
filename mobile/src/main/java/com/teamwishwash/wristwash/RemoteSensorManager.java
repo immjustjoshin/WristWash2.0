@@ -102,6 +102,16 @@ public class RemoteSensorManager {
         });
     }
 
+//    public void sendScoreToWatch() {
+//        executorService.submit(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.v(TAG, "Sending Score");
+//                sendMessageInBackground(SharedConstants.COMMANDS.SHOW_SCORE);
+//            }
+//        });
+//    }
+
     /**
      * sends a command/message (referred to as a path in Google API logic) to the wearable application
      * @param path the message sent to the wearable device

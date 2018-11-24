@@ -37,5 +37,11 @@ public class ListenerService extends WearableListenerService{
             //note: we call startService() instead of stopService() and pass in an intent with the stop service action,
             //so that the service can unregister the sensors and do anything else it needs to do and then call stopSelf()
         }
+
+//        if (messageEvent.getPath().equals(SharedConstants.COMMANDS.SHOW_SCORE)) {
+//            Intent showScoreIntent = new Intent(this, MainActivity.class);
+//            showScoreIntent.setAction(Constants.ACTION.SHOW_SCORE);
+//            startActivity(showScoreIntent);
+//        }
     }
 }

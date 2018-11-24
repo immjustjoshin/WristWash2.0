@@ -20,10 +20,21 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="@string/score"
             android:textColor="@color/black"
-            android:textSize="40sp"
+            android:textSize="30sp"
+            android:layout_gravity="center|top"/>
+
+        <TextView
+            android:id="@+id/scoreTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_score"
+            android:textColor="@color/black"
+            android:textSize="50sp"
             android:layout_gravity="center"/>
+
 
     </FrameLayout>
 </android.support.wear.widget.BoxInsetLayout>
