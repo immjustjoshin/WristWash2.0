@@ -73,14 +73,14 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/getScoreButton"
+        android:id="@+id/recentScoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonsLayout"
         android:layout_marginTop="50dp"
-        android:text="@string/getScore"
-        android:width="100dp"
-        android:height="50dp"
+        android:text="@string/recentScore"
+        android:width="120dp"
+        android:height="60dp"
         android:background="@drawable/button_design"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>

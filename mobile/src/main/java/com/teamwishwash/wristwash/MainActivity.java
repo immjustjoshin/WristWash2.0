@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://d0617634.ngrok.io";
+    private String BASE_URL = "http://360341b5.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     // layouts
     TextView countDownTimer, instructions;
-    Button startButton, cancelButton, getScoreButton;
+    Button startButton, cancelButton, recentScoreButton;
     ImageView gestureImage;
 
     // Timer variables
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         // declaring screen layouts
         startButton = (Button) findViewById(R.id.startButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
-        getScoreButton = (Button) findViewById(R.id.getScoreButton);
+        recentScoreButton = (Button) findViewById(R.id.recentScoreButton);
         countDownTimer = (TextView) findViewById(R.id.countDownTextView);
         instructions = (TextView) findViewById(R.id.instructionsTextView);
         gestureImage = (ImageView) findViewById(R.id.gestureImageView);
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startButton.setVisibility(View.GONE);
-                getScoreButton.setVisibility(View.GONE);
+                recentScoreButton.setVisibility(View.GONE);
                 cancelButton.setVisibility(View.VISIBLE);
                 instructions.setVisibility(View.VISIBLE);
                 gestureImage.setVisibility(View.VISIBLE);
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 startButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.GONE);
                 instructions.setVisibility(View.GONE);
-                getScoreButton.setVisibility(View.GONE);
+                recentScoreButton.setVisibility(View.GONE);
                 gestureImage.setVisibility(View.GONE);
                 gestureImage.setImageResource(R.drawable.gesture1);
                 Toast.makeText(getApplicationContext(), "Cancelling Session", Toast.LENGTH_SHORT).show();
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Get Score listener
-        getScoreButton.setOnClickListener(new View.OnClickListener() {
+        recentScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Determines whether it is running a session or just getting recent scores
@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         if (hasMotionDataFiles()) {
-            getScoreButton.setVisibility(View.VISIBLE);
+            recentScoreButton.setVisibility(View.VISIBLE);
         } else {
-            getScoreButton.setVisibility(View.GONE);
+            recentScoreButton.setVisibility(View.GONE);
         }
     }
 
@@ -289,12 +289,12 @@ public class MainActivity extends AppCompatActivity {
             gestureImage.setImageResource(R.drawable.gesture1);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
             Handler handler = new Handler();
-            handler.post(new Runnable() {
+            handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     getResults();
                 }
-            });
+            }, 50);
         } else if (gestureNumber == 0) {
             // This if statement is when the user cancels hand washing session so it should do nothing
         } else {
@@ -393,6 +393,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean hasMotionDataFiles() {
         // Checks whether there are 6 files in motion-data directory to even show most recent score
         File motionDataDirectory = FileUtil.getMotionDataFile();
-        return motionDataDirectory.listFiles().length == 6;
+        if (motionDataDirectory.listFiles() != null) {
+            return motionDataDirectory.listFiles().length == 6;
+        }
+        return false;
     }
 }
