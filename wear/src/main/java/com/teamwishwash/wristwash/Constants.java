@@ -9,7 +9,7 @@ public class Constants {
         String RECORD_LABEL = "com.teamwishwash.wristwash.action.record";
         String START_SERVICE = "com.teamwishwash.wristwash.action.start-service";
         String STOP_SERVICE = "com.teamwishwash.wristwash.action.stop-service";
-        String SHOW_SCORE = "com.teamwishwash.wristwash.action.show-score";
+        String SEND_SCORE = "com.teamwishwash.wristwash.action.send-score";
     }
 
     public interface NOTIFICATION_ID {

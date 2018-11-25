@@ -5,6 +5,7 @@ package com.teamwishwash.wristwash;
  */
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.wearable.MessageEvent;
 
@@ -38,10 +39,10 @@ public class ListenerService extends WearableListenerService{
             //so that the service can unregister the sensors and do anything else it needs to do and then call stopSelf()
         }
 
-//        if (messageEvent.getPath().equals(SharedConstants.COMMANDS.SHOW_SCORE)) {
-//            Intent showScoreIntent = new Intent(this, MainActivity.class);
-//            showScoreIntent.setAction(Constants.ACTION.SHOW_SCORE);
-//            startActivity(showScoreIntent);
-//        }
+        if (messageEvent.getPath().equals(SharedConstants.COMMANDS.SHOW_SCORE)) {
+            Intent showScoreIntent = new Intent(this, MainActivity.class);
+            showScoreIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(showScoreIntent);
+        }
     }
 }

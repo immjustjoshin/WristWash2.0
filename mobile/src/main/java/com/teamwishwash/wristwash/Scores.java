@@ -59,7 +59,7 @@ public class Scores extends AppCompatActivity {
             nailScore = res.getRubbingNailsScore();
             totalScore = res.getTotalScore();
 
-            // Saves final scores in SharedPreferences for watch to retrieve
+            // Saves final scores in SharedPreferences
             editor.putFloat("Palms", (float) palmScore);
             editor.putFloat("Back", (float) backScore);
             editor.putFloat("Fingers", (float) fingerScore);

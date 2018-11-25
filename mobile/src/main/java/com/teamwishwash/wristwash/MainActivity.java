@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
             mainTimer.cancel();
         }
 
+        // Ends hand washing session when it has recorded 6 times
         if (gestureNumber > 6) {
             stopDataCollection();
             gestureNumber = 1;
@@ -288,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
             startButton.setVisibility(View.VISIBLE);
             gestureImage.setImageResource(R.drawable.gesture1);
             Toast.makeText(getApplicationContext(), "Finalizing Score...", Toast.LENGTH_LONG).show();
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -295,9 +297,9 @@ public class MainActivity extends AppCompatActivity {
                     getResults();
                 }
             }, 50);
-        } else if (gestureNumber == 0) {
-            // This if statement is when the user cancels hand washing session so it should do nothing
-        } else {
+        } else if (gestureNumber == 0) {    // When the user cancels hand washing session so it should do nothing
+
+        } else {    // Continues recording sensor data
             stopDataCollection();
 
             // Sets the different images for each hand washing gesture during the session
@@ -320,6 +322,8 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     gestureImage.setImageResource(R.drawable.gesture1);
             }
+
+            // Restarts timer & continues collecting sensor data
             startStopPrepTimer();
         }
     }
@@ -383,6 +387,14 @@ public class MainActivity extends AppCompatActivity {
                     Results newResults = gson.fromJson(response.toString(), Results.class);
                     scoresIntent.putExtra(Constants.VALUES.FINAL_SCORES, newResults.getScores());
                     startActivity(scoresIntent);
+
+                    Handler watchHandler = new Handler();
+                    watchHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            remoteSensorManager.sendScoreToWatch();
+                        }
+                    }, 50);
                 }
             });
         } catch (Exception e){

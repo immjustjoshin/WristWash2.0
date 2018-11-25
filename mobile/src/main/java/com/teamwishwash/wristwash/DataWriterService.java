@@ -58,7 +58,6 @@ public class DataWriterService extends Service{
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Signal Received!", "");
             if (intent.getAction() != null) {
                 if (intent.getAction().equals(Constants.ACTION.SEND_ACCELEROMETER)) {
                     String line = intent.getStringExtra(Constants.VALUES.SENSOR_DATA);

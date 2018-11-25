@@ -1,11 +1,8 @@
 package com.teamwishwash.wristwash;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.widget.TextView;
-
-import com.teamwishwash.shared.SharedConstants;
 
 public class MainActivity extends WearableActivity {
 
@@ -19,11 +16,7 @@ public class MainActivity extends WearableActivity {
         mTextView = (TextView) findViewById(R.id.text);
         scoreTextView = (TextView) findViewById(R.id.scoreTextView);
 
-        // SharedPreferences Set Up
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(SharedConstants.VALUES.SCORE_KEY, MODE_PRIVATE);
-
-        // Gets total score from Shared Preferences
-        double score = (double) pref.getFloat("Total", -1);
+        double score = -1.0;
 
         if (score >= 0.0) {
             scoreTextView.setText(String.valueOf(score));
