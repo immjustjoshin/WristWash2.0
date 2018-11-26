@@ -102,12 +102,12 @@ public class RemoteSensorManager {
         });
     }
 
-    public void sendScoreToWatch() {
+    public void sendScoreToWatch(final double score) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "Sending Score");
-                sendMessageInBackground(SharedConstants.COMMANDS.SHOW_SCORE);
+                Log.d("Sending Score: ", String.valueOf(score));
+                sendScoreInBackground(score);
             }
         });
     }
@@ -127,6 +127,25 @@ public class RemoteSensorManager {
                             @Override
                             public void onResult(MessageApi.SendMessageResult sendMessageResult) {
                                 Log.d(TAG, "startOrStopInBackground(" + path + "): " + sendMessageResult.getStatus().isSuccess());
+                            }
+                        });
+            }
+        } else {
+            Log.w(TAG, "No connections available");
+        }
+    }
+
+    private void sendScoreInBackground(final double score) {
+        if (validateConnection()) {
+            List<Node> nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await().getNodes();
+
+            for (Node node : nodes) {
+                Log.i(TAG, "add node " + node.getDisplayName());
+                Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), String.valueOf(score), null).
+                        setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                            @Override
+                            public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                                Log.d(TAG, "startOrStopInBackground(" + score + "): " + sendMessageResult.getStatus().isSuccess());
                             }
                         });
             }

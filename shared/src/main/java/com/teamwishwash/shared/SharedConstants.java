@@ -19,6 +19,7 @@ public class SharedConstants {
     public interface DATA_LAYER_CONSTANTS {
         String SENSOR_PATH = "/sensors/";
         String LABEL_PATH = "/label";
+        String SCORE_PATH = "/score";
     }
 
     public interface VALUES {

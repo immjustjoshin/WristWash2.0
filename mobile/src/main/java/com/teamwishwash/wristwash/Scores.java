@@ -3,6 +3,7 @@ package com.teamwishwash.wristwash;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,15 @@ public class Scores extends AppCompatActivity {
     ListView detailList;
     List<HandWashTechnique> handWashTechniqueList = new ArrayList<>();
 
+    /** The sensor manager which handles sensors on the wearable device remotely */
+    private RemoteSensorManager remoteSensorManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
+
+        remoteSensorManager = RemoteSensorManager.getInstance(this);
 
         /** SharedPreferences set up. Used for saving recent scores and for watch to access those scores */
         SharedPreferences pref = getApplicationContext().getSharedPreferences(SharedConstants.VALUES.SCORE_KEY, MODE_PRIVATE);
@@ -40,7 +46,7 @@ public class Scores extends AppCompatActivity {
         detailList = (ListView) findViewById(R.id.detailsListView);
 
         // Score placeholders
-        double palmScore, backScore, fingerScore, nailScore, totalScore;
+        final double palmScore, backScore, fingerScore, nailScore, totalScore;
 
         // Intent related
         Intent intent = getIntent();
@@ -74,6 +80,15 @@ public class Scores extends AppCompatActivity {
             nailScore = Results.formatDecimals(pref.getFloat("Nails", 0));
             totalScore = Results.formatDecimals(pref.getFloat("Total", 0));
         }
+
+        // Send Score to Watch
+        Handler watchHandler = new Handler();
+        watchHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                remoteSensorManager.sendScoreToWatch(totalScore);
+            }
+        }, 50);
 
         // Adds hand washing technique and scores to list
         handWashTechniqueList.add(new HandWashTechnique("Rubbing Palms", palmScore));

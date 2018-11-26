@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -388,14 +389,6 @@ public class MainActivity extends AppCompatActivity {
                     Results newResults = gson.fromJson(response.toString(), Results.class);
                     scoresIntent.putExtra(Constants.VALUES.FINAL_SCORES, newResults.getScores());
                     startActivity(scoresIntent);
-
-                    Handler watchHandler = new Handler();
-                    watchHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            remoteSensorManager.sendScoreToWatch();
-                        }
-                    }, 50);
                 }
             });
         } catch (Exception e){
