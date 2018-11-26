@@ -41,8 +41,9 @@
 
             <ImageView
                 android:id="@+id/helpImage1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_1_description"
                 app:srcCompat="@drawable/gesture1" />
@@ -72,8 +73,9 @@
 
             <ImageView
                 android:id="@+id/helpImage2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_2_description"
                 app:srcCompat="@drawable/gesture2" />
@@ -103,8 +105,9 @@
 
             <ImageView
                 android:id="@+id/helpImage3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_3_description"
                 app:srcCompat="@drawable/gesture3" />
@@ -134,8 +137,9 @@
 
             <ImageView
                 android:id="@+id/helpImage4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_4_description"
                 app:srcCompat="@drawable/gesture4" />
@@ -165,8 +169,9 @@
 
             <ImageView
                 android:id="@+id/helpImage5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_5_description"
                 app:srcCompat="@drawable/gesture5" />
@@ -196,8 +201,9 @@
 
             <ImageView
                 android:id="@+id/helpImage6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="330dp"
+                android:layout_height="180dp"
+                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/step_6_description"
                 app:srcCompat="@drawable/gesture6" />

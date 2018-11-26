@@ -40,12 +40,13 @@
 
     <ImageView
         android:id="@+id/detailGestureImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="330dp"
+        android:layout_height="180dp"
         android:layout_below="@id/detailScoreTextView"
         android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
         android:layout_marginTop="25dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/hand_washing_technique"
         app:srcCompat="@drawable/gesture1" />
 

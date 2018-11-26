@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private RemoteSensorManager remoteSensorManager;
 
     /** The url for which our server is placed at */
-    private String BASE_URL = "http://360341b5.ngrok.io";
+    private String BASE_URL = "http://9d2c811c.ngrok.io";
 
     /** post request parameter to add after BASE_URL*/
     private String POST_CALL = "/post";
