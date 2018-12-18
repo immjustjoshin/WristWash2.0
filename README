@@ -1,0 +1,7 @@
+WristWash2.0 - Android application for mobile and android wear platforms
+Authors: Joshua Kim, Chanhee Lee 
+Purpose: Analyzes user's handwashing techniques based on the CDC's recommendations, 
+returns scores and tips for each step as well as an overall score as feedback.
+user's handwashing techniques and returns a score. 
+Note: Commits were made through the account: @immjustjoshin. However, 
+in person contributions were made by the user @chanhlee 
